@@ -13,12 +13,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
+
+import Blueprint.Room;
 
 @SuppressWarnings("serial")
 public class NavigateurMain extends JFrame {
@@ -78,39 +82,25 @@ public class NavigateurMain extends JFrame {
 		fileMenu.add(closeItem);  
 		bar.add(fileMenu);  
 
-		frame.setMenuBar(bar);  
-
-		//默认模式为 FileDialog.LOAD  
+		frame.setMenuBar(bar);    
 		openDia = new FileDialog(frame,"Ouvrir",FileDialog.LOAD);
 
 		openItem.addActionListener(new ActionListener()  
 		{  
-			//设置打开文件功能  
 			public void actionPerformed(ActionEvent e)  
 			{  
 				openDia.setVisible(true);  
-				String dirPath = openDia.getDirectory();//获取文件路径  
-				String fileName = openDia.getFile();//获取文件名称  
-				//System.out.println(dirPath +"++"+ fileName);  
-
-				//如果打开路径 或 目录为空 则返回空  
-				if(dirPath == null || fileName == null)  
-					return ;  
-
-				File file = new File(dirPath,fileName);  
-
-				try  
-				{  
-					BufferedReader bufr = new BufferedReader(new FileReader(file));    
-				}  
-				catch (IOException ex)  
-				{  
-					throw new RuntimeException("文件读取失败！");  
-				}  
-
-
-
-			}  
+				String dirPath = openDia.getDirectory();  
+				String fileName = openDia.getFile(); 
+				File file = new File(dirPath,fileName);  	
+				Room r= new Room(4, "Rectangle");	
+				try {
+					r.read(fileName);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}	
 		});  
 
 		closeItem.addActionListener(new ActionListener()  

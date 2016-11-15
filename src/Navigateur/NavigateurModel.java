@@ -1,6 +1,6 @@
 package Navigateur;
-
-
+import Blueprint.Room;
+import Blueprint.Wall;
 public class NavigateurModel {
 		
 		private static float posX = 2;
@@ -16,8 +16,7 @@ public class NavigateurModel {
 		private float walkBiasAngle = 0;
 		
 		private static boolean isLightOn = false;
-		
-		
+
 		public float getPosX(){
 			return posX;
 		}

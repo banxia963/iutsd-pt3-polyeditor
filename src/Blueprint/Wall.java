@@ -12,6 +12,9 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
+
+import com.jogamp.opengl.GL2;
+
 import Modeleur.ModeleurModel;
 
 public class Wall {
@@ -92,6 +95,17 @@ public class Wall {
 	
 	}
 	
-	
+	public void draw3d(GL2 gl, float x1, float z1, float x2, float z2)
+	{
+		gl.glBegin(GL2.GL_QUADS);
+		
+			gl.glColor3f(0.8f, 0.3f, 0.8f);
+			gl.glVertex3f(x1, 1.0f, z1);
+			gl.glVertex3f(x2, 1.0f, z2);
+			gl.glVertex3f(x2, 0.0f, z2);
+			gl.glVertex3f(x1, 0.0f, z1);
+			
+		gl.glEnd();
+	}
 	
 }
