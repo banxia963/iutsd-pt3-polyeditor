@@ -9,19 +9,22 @@
 package Modeleur;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
-import Blueprint.Vertex;
+import com.jogamp.opengl.util.texture.Texture;
 
 /** 
  * class MoeleurView 
@@ -36,7 +39,7 @@ public class ModeleurView extends JFrame {
 	//code Model
 	private JPanel bg, toolbar, options, save;
 	private Menu menu;
-	private JButton bSave;
+	private Image demo;
 	
 	
 	
@@ -58,6 +61,7 @@ public class ModeleurView extends JFrame {
 		// menu contient options
 		menu = new Menu();
 		menu.setPreferredSize(new Dimension(130*2,420*2));
+		menu.addMouseListener(menu);
 		
 		options = new JPanel();
 		options.setBackground(ModeleurModel.DARKGREY4);
@@ -69,13 +73,14 @@ public class ModeleurView extends JFrame {
 		save.setPreferredSize(new Dimension(130*2,45*2));
 		
 		Font font = new Font("Arial", Font.BOLD, 20);
-		bSave = new JButton("ENREGISTRER");
-		bSave.setFont(font);
-		bSave.setForeground(ModeleurModel.BLACK);
-		bSave.setBackground(ModeleurModel.DARKGREY4);
-		bSave.setPreferredSize(new Dimension(110*2,70));
-		bSave.setFocusPainted(false);;
-		save.add(bSave);
+		mm.bSave = new JButton("ENREGISTRER");
+		mm.bSave.setFont(font);
+		mm.bSave.setForeground(ModeleurModel.BLACK);
+		mm.bSave.setBackground(ModeleurModel.DARKGREY4);
+		mm.bSave.setPreferredSize(new Dimension(110*2,70));
+		mm.bSave.setFocusPainted(false);
+		mm.bSave.addActionListener(mc);
+		save.add(mm.bSave);
 		
 		mm.graph.setPreferredSize(new Dimension(550*2,340*2));
 		mm.graph.addMouseListener(mc);
@@ -95,12 +100,54 @@ public class ModeleurView extends JFrame {
 	/**
 	 * 
 	 * */
-	class Menu extends JPanel {
+	class Menu extends JPanel implements MouseListener{
+		Menu(){
+			try{
+				demo = ImageIO.read(new File("demo.png"));
+			} catch (Exception e){};
+		}
+		
 		public void paintComponent (Graphics g) {
 			super.paintComponent(g);
 			this.setBackground(ModeleurModel.DARKGREY2);
 			g.setColor(ModeleurModel.DARKGREY4);
 			g.fillRoundRect(20, 20, 110*2,410*2, 50, 50);
+			
+			g.drawImage(demo, 20, 20, this);
+			g.drawImage(demo, 20, 110, this);
+			g.drawImage(demo, 20, 200, this);
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			//mm.room.addVertex();
+			mm.room.addDoor("Door");
+			mm.graph.validate();
+			mm.graph.repaint();
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

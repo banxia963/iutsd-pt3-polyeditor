@@ -1,94 +1,129 @@
 package Navigateur;
+import java.awt.FileDialog;
+import java.awt.MenuItem;
+
+import javax.swing.JFrame;
+
+import com.jogamp.opengl.util.texture.Texture;
+
 import Blueprint.Room;
 import Blueprint.Wall;
 public class NavigateurModel {
-		
-		private static float posX = 2;
-		private float posZ = 2;
-		private float headingY = 0; // heading of player; about y-axis
-		private float lookUpAngle =0.0f;
-		
-		private float moveIncrement = 0.05f;
-		private float turnIncrement = 1.5f; // each turn in degree
-		private float lookUpIncrement = 1.0f;
-		
-		private float walkBias = 0;
-		private float walkBiasAngle = 0;
-		
-		private static boolean isLightOn = false;
 
-		public float getPosX(){
-			return posX;
-		}
-		
-		public float getPosZ(){
-			return posZ;
-		}
-		
-		public float getHeadingY(){
-			return headingY;
-		}
-		
-		public float getLookUpAngle(){
-			return lookUpAngle;
-		}
-		
-		public float getMoveIncrement() {
-			return moveIncrement;
-		}
-		
-		public float getTurnIncrement(){
-			return turnIncrement;
-		}
-		
-		public float getLookUpIncrement(){
-			return lookUpIncrement;
-		}
-		
-		public float getWalkBias(){
-			return walkBias;
-		}
-		
-		public float getWalkBiasAngle(){
-			return walkBiasAngle;
-		}
-		
-		public void turnLeft(){
-			headingY += turnIncrement;
-		}
-		
-		public void turnRight(){
-			headingY -= turnIncrement;
-		}
-		
-		public boolean getIsLigntOn(){
-			return isLightOn;
-		}
-		
-		public void turnLight(){
-			isLightOn = !isLightOn;
-		}
-		public void moveIn(){
-			posX -= (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
-			posZ -= (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
-			walkBiasAngle = (walkBiasAngle >= 359.0f) ? 0.0f : walkBiasAngle + 10.0f;
-			walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
-		}
-		
-		public void moveOut() {
-			posX += (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
-			posZ += (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
-			walkBiasAngle = (walkBiasAngle <=1.0f) ? 359.0f : walkBiasAngle - 10.0f;
-			walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
-		}
-		
-		public void lookUp(){
-			lookUpAngle -= lookUpIncrement;
-		}
-		
-		public void lookDown() {
-			lookUpAngle += lookUpIncrement;
-		}
+	protected MenuItem openItem= new MenuItem("Ouvrir");
+	final JFrame frame = new JFrame();	 
+	protected MenuItem closeItem = new MenuItem("Exit"); 
+	protected FileDialog openDia=  new FileDialog(frame,"Ouvrir",FileDialog.LOAD);
+	protected MenuItem menutexture = new MenuItem("Texture");
+	protected FileDialog textureDia = new FileDialog(frame,"Texture",FileDialog.LOAD);
+	protected Texture texture;
+	protected String textureFileName= "images/crate.png";
+	protected String textureFileType=".png";
+	protected float textureTop, textureBottom, textureLeft, textureRight;
+
+	private static float posX = 2;
+	private float posZ = 2;
+	private float headingY = 0; // heading of player; about y-axis
+	private float lookUpAngle =0.0f;
+
+	private float moveIncrement = 0.05f;
+	private float turnIncrement = 3.0f; // each turn in degree
+	private float lookUpIncrement = 1.0f;
+
+	private float walkBias = 0;
+	private float walkBiasAngle = 0;
+
+	private static boolean isLightOn = false;
+
+	/** retourner le coordonn¨¦e de X */
+	public float getPosX(){
+		return posX;
+	}
+	
+	/** retourner le coordonn¨¦e de Z */
+	public float getPosZ(){
+		return posZ;
+	}
+	
+	/** retourner le coordonn¨¦e de Y */
+	public float getHeadingY(){
+		return headingY;
+	}
+	
+	/** retourner le lookupAngle*/
+	public float getLookUpAngle(){
+		return lookUpAngle;
+	}
+	
+	/** retourner le moveIncrement*/
+	public float getMoveIncrement() {
+		return moveIncrement;
+	}
+	
+	/** retrouner le TurnIncrement*/
+	public float getTurnIncrement(){
+		return turnIncrement;
+	}
+	
+	/** retourner le LookUpTncrement*/
+	public float getLookUpIncrement(){
+		return lookUpIncrement;
+	}
+	
+	/** retourner le WalkBias*/
+	public float getWalkBias(){
+		return walkBias;
+	}
+	
+	/** retourner le WalkBiasAngle*/ 
+	public float getWalkBiasAngle(){
+		return walkBiasAngle;
+	}
+	
+	/** m¨¦thode de tourner ¨¤ gauche*/
+	public void turnLeft(){
+		headingY += turnIncrement;
 	}
 
+	/** m¨¦thode de tourner ¨¤ droit*/
+	public void turnRight(){
+		headingY -= turnIncrement;
+	}
+	
+	/** l'¨¦tat de la lumi¨¨re, retourner True si la lumi¨¨re est allum¨¦, False si la lumi¨¨re est ¨¦tendre*/ 
+	public boolean getIsLigntOn(){
+		return isLightOn;
+	}
+	
+	/** m¨¦thode de allumer la lumi¨¨re*/ 
+	public void turnLight(){
+		isLightOn = !isLightOn;
+	}
+	
+	/** m¨¦thode de bouger en avant */
+	public void moveIn(){
+		posX -= (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
+		posZ -= (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
+		walkBiasAngle = (walkBiasAngle >= 359.0f) ? 0.0f : walkBiasAngle + 10.0f;
+		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
+	}
+	
+	/** m¨¦thode de bouger en arri¨¨re*/
+	public void moveOut() {
+		posX += (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
+		posZ += (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
+		walkBiasAngle = (walkBiasAngle <=1.0f) ? 359.0f : walkBiasAngle - 10.0f;
+		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
+	}
+	
+	/** m¨¦thode de regarder en haut*/
+	public void lookUp(){
+		lookUpAngle -= lookUpIncrement;
+	}
+	
+	/** m¨¦thode de regarder en bas */
+	public void lookDown() {
+		lookUpAngle += lookUpIncrement;
+	}
 
+}

@@ -8,6 +8,6 @@
 
 package Blueprint;
 
-public class Corridor extends Space{
+public abstract class Space {
 
 }

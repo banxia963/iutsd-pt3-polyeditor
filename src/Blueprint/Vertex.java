@@ -13,21 +13,21 @@ import java.awt.Graphics;
 import Modeleur.ModeleurModel;
 
 public class Vertex {
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private boolean selected = false;
 	
-	public Vertex(int x, int y) {
+	public Vertex(float x, float y) {
 		super();
 		this.x = x;
 		this.y = y;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 	
@@ -40,9 +40,15 @@ public class Vertex {
 	}
 	
 	public void select(int x, int y){
-		int disX, disY;
+		if(selected) {
+			selected=!selected;
+			return;
+			}
+		
+		float disX, disY;
 		disX=x-this.x;
 		disY=y-this.y;
+		
 		if ( disX<25 && disX>0 && disY<25 && disY>0){
 			selected = true;
 		}
@@ -59,11 +65,11 @@ public class Vertex {
 	public void draw (Graphics g){
 		if (selected) {
 			g.setColor(ModeleurModel.WHITE);
-			g.fillOval(x, y, 25, 25);
+			g.fillOval((int)x, (int)y, 25, 25);
 			return;
 		}
 		g.setColor(ModeleurModel.BLACK);
-		g.fillOval(x, y, 25, 25);
+		g.fillOval((int)x, (int)y, 25, 25);
 		return;
 	}
 	
