@@ -1,3 +1,11 @@
+/**
+ * PT3 Poly Editor
+ * DUT Informatique 2016/2017 
+ * Auteur : HUANG Qijia
+ * 			LU Yi
+ * Tuteur : P. Even
+ * */
+
 package Navigateur;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
@@ -179,9 +187,9 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+		//r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
 
-	    // r.draw(gl);
+	     r.draw(gl);
 	     
 	}
 	/**

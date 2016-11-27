@@ -15,11 +15,14 @@ import com.jogamp.opengl.GL2;
 public abstract class Open {
 	protected String id, next=null;
 	protected Vertex v1,v2;
+	protected float r1,r2;
 	
 	public Open(String id, Vertex v1, Vertex v2){
 		this.id=id;
 		this.v1=v1;
 		this.v2=v2;
+		this.r1=(float)1/4;
+		this.r2=(float)3/4;
 	}
 	
 	public String getID(){
@@ -33,6 +36,24 @@ public abstract class Open {
 	public Vertex getV2(){
 		return v2;
 	}
+	
+	public float getR1(){
+		return r1;
+	}
+	
+	public float getR2(){
+		return r2;
+	}
+	
+	public void setR1(float r1){
+		this.r1=r1;
+	}
+	
+	public void serR2(float r2){
+		this.r2=r2;
+	}
+	
+	public abstract void move(float x1, float y1, float x2, float y2);
 	
 	public abstract void draw(Graphics g);
 

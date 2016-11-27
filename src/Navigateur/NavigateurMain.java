@@ -1,20 +1,18 @@
+/**
+ * PT3 Poly Editor
+ * DUT Informatique 2016/2017 
+ * Auteur : HUANG Qijia
+ * 			LU Yi
+ * Tuteur : P. Even
+ * */
+
 package Navigateur;
 
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.Menu;
 import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -22,13 +20,11 @@ import javax.swing.SwingUtilities;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import Blueprint.Room;
-
 @SuppressWarnings("serial")
 public class NavigateurMain extends JFrame {
 	// Definir les constants
 	/** nom de la fenetre */
-	private static String TITLE = "Escape Demo";
+	private static String TITLE = "Poly Editor - Navigateur";
 	/** largeur de canvas */
 	private static final int CANVAS_WIDTH = 800;
 	/** longeur de canvas */

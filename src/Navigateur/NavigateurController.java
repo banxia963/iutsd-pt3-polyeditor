@@ -161,6 +161,5 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 		
 	}
 
-	
 
 }

@@ -37,7 +37,7 @@ public class Wall {
 
 	
 	
-	//Rayon
+	/** Rayon de Vertex */
 	private float r = 25/2;
 
 	public Wall(Vertex v1, Vertex v2) {
@@ -92,6 +92,7 @@ public class Wall {
 		
 		return betweenX && betweenY;
 	}
+
 	public void select(int x, int y){
 		if(selected) {
 			selected=!selected;
@@ -190,6 +191,48 @@ public class Wall {
 		return list;
 	}
 	
+	public void addDoor(String id) {
+		float midX=(v1.getX()+v2.getX())/2;
+		float midY=(v1.getY()+v2.getY())/2;
+		Vertex c1 = new Vertex((v1.getX()+midX)/2,(v1.getY()+midY)/2);
+		Vertex c2 = new Vertex((v2.getX()+midX)/2,(v2.getY()+midY)/2);
+		o = new Door(id, c1, c2);		
+	}
+
+	public void addDoor(String id, float f, float g, float h, float i){
+		Vertex c1 = new Vertex(f,g);
+		Vertex c2 = new Vertex(h,i);
+		o = new Door(id, c1, c2);
+	}
+	
+	public void updateOpen(){
+		float disX = v2.getX()-v1.getX();
+		float disY = v2.getY()-v1.getY();
+		float disXY = (float) Math.sqrt(disX*disX+disY*disY);
+		float f1 = o.getR1() * disXY;
+		float f2 = o.getR2() * disXY;
+		float supX1 = f1 * (disX/disXY);
+		float supY1 = f1 * (disY/disXY);
+		float supX2 = f2 * (disX/disXY);
+		float supY2 = f2 * (disY/disXY);
+		o.move(v1.getX()+supX1, v1.getY()+supY1, v1.getX()+supX2, v1.getY()+supY2);
+		
+	}
+	
+	public void addWindow(String id) {
+		float midX=(v1.getX()+v2.getX())/2;
+		float midY=(v1.getY()+v2.getY())/2;
+		Vertex c1 = new Vertex((v1.getX()+midX)/2,(v1.getY()+midY)/2);
+		Vertex c2 = new Vertex((v2.getX()+midX)/2,(v2.getY()+midY)/2);
+		o = new Window(id, c1, c2);
+	}
+	
+	public void addWindow(String id, float f, float g, float h, float i) {
+		Vertex c1 = new Vertex(f,g);
+		Vertex c2 = new Vertex(h,i);
+		o = new Window(id, c1, c2);
+	}
+	
 	public void draw(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		if (selected){
@@ -205,7 +248,7 @@ public class Wall {
 		v2.draw(g);
 		
 		if(o!=null){
-			addDoor("Door");
+			updateOpen();
 			o.draw(g);
 		}
 	
@@ -213,51 +256,50 @@ public class Wall {
 	
 	public void draw(GL2 gl)
 	{
+		float weight = 10f;
+		float b = 0;
+		float x =0;
+		float z =0;
+		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
+		
 		if(o==null){
-			float weight = 20f;
-			float b = 0;
-			float x =0;
-			float z =0;
-			float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
-			if(v1.getY()-v2.getY()!=0){
-			b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
-			x = (float) ((weight/2)*Math.sqrt(1/(1-b*b)));
-			z = (float) ((weight/2)*Math.sqrt(b*b/(1-b*b)));
+			if (v1.getY()-v2.getY()!=0) {
+				b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
+				x = (float) ((weight/2)*Math.sqrt(1/(1+b*b)));
+				z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
 			
-			if(b> 0){
-				X1= v1.getX()+x;
-				X2= v1.getX()-x;
-				X3= v2.getX()+x;
-				X4= v2.getX()-x;
+				if(b> 0){
+					X1= v1.getX()+x;
+					X2= v1.getX()-x;
+					X3= v2.getX()+x;
+					X4= v2.getX()-x;
 
-				Z1 = v1.getY()+z;
-				Z2 = v1.getY()-z;
-				Z3 = v2.getY()+z;
-				Z4 = v2.getY()-z;
-			}
-			if(b< 0){
-				X1= v1.getX()-x;
-				X2= v1.getX()+x;
-				X3= v2.getX()-x;
-				X4= v2.getX()+x;
+					Z1 = v1.getY()+z;
+					Z2 = v1.getY()-z;
+					Z3 = v2.getY()+z;
+					Z4 = v2.getY()-z;
+				} else if(b < 0){
+					X1= v1.getX()-x;
+					X2= v1.getX()+x;
+					X3= v2.getX()-x;
+					X4= v2.getX()+x;
 
-				Z1 = v1.getY()+z;
-				Z2 = v1.getY()-z;
-				Z3 = v2.getY()+z;
-				Z4 = v2.getY()-z;
-			}
-			if(b==0){
-				X1=v1.getX()+weight/2;
-				X2=v1.getX()-weight/2;
-				X3=v1.getX()+weight/2;
-				X4=v1.getX()-weight/2;
-				Z1 = v1.getY();
-				Z2 = v1.getY();
-				Z3 = v2.getY();
-				Z4 = v2.getY();
-			}
-			}
-			else{
+					Z1 = v1.getY()+z;
+					Z2 = v1.getY()-z;
+					Z3 = v2.getY()+z;
+					Z4 = v2.getY()-z;
+				} else {
+					X1=v1.getX()+weight/2;
+					X2=v1.getX()-weight/2;
+					X3=v1.getX()+weight/2;
+					X4=v1.getX()-weight/2;
+					
+					Z1 = v1.getY();
+					Z2 = v1.getY();
+					Z3 = v2.getY();
+					Z4 = v2.getY();
+				}
+			} else {
 				X1=v1.getX();
 				X2=v1.getX();
 				X3=v2.getX();
@@ -267,115 +309,101 @@ public class Wall {
 				Z3 = v2.getY()+weight/2;
 				Z4 = v2.getY()-weight/2;
 			}
-			
+
 			
 			gl.glBegin(GL2.GL_QUADS);
 			
+			gl.glColor3f(1.0f, 0.0f, 0.0f); 
+				gl.glVertex3f(X1/100, 2.0f, Z1/100);
+				gl.glVertex3f(X2/100, 2.0f, Z2/100);
+				gl.glVertex3f(X2/100, 0.0f, Z2/100);
+				gl.glVertex3f(X1/100, 0.0f, Z1/100);
+				
+				gl.glVertex3f(X1/100, 2.0f, Z1/100);
+				gl.glVertex3f(X3/100, 2.0f, Z3/100);
+				gl.glVertex3f(X3/100, 0.0f, Z3/100);
+				gl.glVertex3f(X1/100, 0.0f, Z1/100);
 			
-			gl.glVertex3f(X1/100, 2.0f, Z1/100);
-			gl.glVertex3f(X2/100, 2.0f, Z2/100);
-			gl.glVertex3f(X2/100, 0.0f, Z2/100);
-			gl.glVertex3f(X1/100, 0.0f, Z1/100);
+				gl.glVertex3f(X2/100, 2.0f, Z2/100);
+				gl.glVertex3f(X4/100, 2.0f, Z4/100);
+				gl.glVertex3f(X4/100, 0.0f, Z4/100);
+				gl.glVertex3f(X2/100, 0.0f, Z2/100);
 			
-			gl.glVertex3f(X1/100, 2.0f, Z1/100);
-			gl.glVertex3f(X3/100, 2.0f, Z3/100);
-			gl.glVertex3f(X3/100, 0.0f, Z3/100);
-			gl.glVertex3f(X1/100, 0.0f, Z1/100);
-		
-			gl.glVertex3f(X2/100, 2.0f, Z2/100);
-			gl.glVertex3f(X4/100, 2.0f, Z4/100);
-			gl.glVertex3f(X4/100, 0.0f, Z4/100);
-			gl.glVertex3f(X2/100, 0.0f, Z2/100);
-		
-			gl.glVertex3f(X3/100, 2.0f, Z3/100);
-			gl.glVertex3f(X4/100, 2.0f, Z4/100);
-			gl.glVertex3f(X4/100, 0.0f, Z4/100);
-			gl.glVertex3f(X3/100, 0.0f, Z3/100);
+				gl.glVertex3f(X3/100, 2.0f, Z3/100);
+				gl.glVertex3f(X4/100, 2.0f, Z4/100);
+				gl.glVertex3f(X4/100, 0.0f, Z4/100);
+				gl.glVertex3f(X3/100, 0.0f, Z3/100);
+	
+				gl.glVertex3f(X1/100, 0.0f, Z1/100);
+				gl.glVertex3f(X2/100, 0.0f, Z2/100);
+				gl.glVertex3f(X4/100, 0.0f, Z4/100);
+				gl.glVertex3f(X3/100, 0.0f, Z3/100);
+				
+				gl.glVertex3f(X1/100, 2.0f, Z1/100);
+				gl.glVertex3f(X2/100, 2.0f, Z2/100);
+				gl.glVertex3f(X4/100, 2.0f, Z4/100);
+				gl.glVertex3f(X3/100, 2.0f, Z3/100);
 
-			gl.glVertex3f(X1/100, 0.0f, Z1/100);
-			gl.glVertex3f(X2/100, 0.0f, Z2/100);
-			gl.glVertex3f(X4/100, 0.0f, Z4/100);
-			gl.glVertex3f(X3/100, 0.0f, Z3/100);
-			
-			gl.glVertex3f(X1/100, 2.0f, Z1/100);
-			gl.glVertex3f(X2/100, 2.0f, Z2/100);
-			gl.glVertex3f(X4/100, 2.0f, Z4/100);
-			gl.glVertex3f(X3/100, 2.0f, Z3/100);
-		
-			
-			
 			gl.glEnd();
 			
 		} else {
-			gl.glBegin(GL2.GL_QUADS);
 			
-			gl.glColor3f(0.8f, 0.3f, 0.8f);
-			gl.glVertex3f(v1.getX()/100, 1.0f, v1.getY()/100);
-			gl.glVertex3f(o.getV1().getX()/100, 1.0f, o.getV1().getY()/100);
-			gl.glVertex3f(o.getV1().getX()/100, 0.0f, o.getV1().getY()/100);
-			gl.glVertex3f(v1.getX()/100, 0.0f, v1.getY()/100);
-			
+			new Wall(v1,o.getV1()).draw(gl);
 			o.draw(gl);
-			
-			gl.glVertex3f(o.getV2().getX()/100, 1.0f, o.getV2().getY()/100);
-			gl.glVertex3f(v2.getX()/100, 1.0f, v2.getY()/100);
-			gl.glVertex3f(v2.getX()/100, 0.0f, v2.getY()/100);
-			gl.glVertex3f(o.getV2().getX()/100, 0.0f, o.getV2().getY()/100);
-		
-		gl.glEnd();
+			new Wall(o.getV2(),v2).draw(gl);
 		}
 	}
 
+	
 	public void draw(GL2 gl, float tT, float tB, float tL, float tR){
-		float weight = 1f;
+		float weight = 10f;
 		float b = 0;
 		float x =0;
 		float z =0;
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
 		if(v1.getY()-v2.getY()!=0){
-		b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
-		x = (float) ((weight/2)*Math.sqrt(1/(1+b*b))); 
-		z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
-		
-		
-		if(b> 0){
-			X1= v1.getX()+x;
-			X2= v1.getX()-x;
-			X3= v2.getX()+x;
-			X4= v2.getX()-x;
-
-			Z1 = v1.getY()+z;
-			Z2 = v1.getY()-z;
-			Z3 = v2.getY()+z;
-			Z4 = v2.getY()-z;
-		}
-		if(b< 0){
-			X1= v1.getX()-x;
-			X2= v1.getX()+x;
-			X3= v2.getX()-x;
-			X4= v2.getX()+x;
-
-			Z1 = v1.getY()+z;
-			Z2 = v1.getY()-z;
-			Z3 = v2.getY()+z;
-			Z4 = v2.getY()-z;
-		}
-		if(b==0){
-			X1=v1.getX()+weight/2;
-			X2=v1.getX()-weight/2;
-			X3=v1.getX()+weight/2;
-			X4=v1.getX()-weight/2;
-			Z1 = v1.getY();
-			Z2 = v1.getY();
-			Z3 = v2.getY();
-			Z4 = v2.getY();
-		}
-		}
-		else{
+			b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
+			x = (float) ((weight/2)*Math.sqrt(1/(1+b*b))); 
+			z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
+			
+			
+			if ( b > 0){
+				X1= v1.getX()+x;
+				X2= v1.getX()-x;
+				X3= v2.getX()+x;
+				X4= v2.getX()-x;
+	
+				Z1 = v1.getY()+z;
+				Z2 = v1.getY()-z;
+				Z3 = v2.getY()+z;
+				Z4 = v2.getY()-z;
+			} else if( b < 0){
+				X1= v1.getX()-x;
+				X2= v1.getX()+x;
+				X3= v2.getX()-x;
+				X4= v2.getX()+x;
+	
+				Z1 = v1.getY()+z;
+				Z2 = v1.getY()-z;
+				Z3 = v2.getY()+z;
+				Z4 = v2.getY()-z;
+			} else {
+				X1=v1.getX()+weight/2;
+				X2=v1.getX()-weight/2;
+				X3=v1.getX()+weight/2;
+				X4=v1.getX()-weight/2;
+				
+				Z1 = v1.getY();
+				Z2 = v1.getY();
+				Z3 = v2.getY();
+				Z4 = v2.getY();
+			}
+		} else {
 			X1=v1.getX();
 			X2=v1.getX();
 			X3=v2.getX();
 			X4=v2.getX();
+			
 			Z1 = v1.getY()+weight/2;
 			Z2 = v1.getY()-weight/2;
 			Z3 = v2.getY()+weight/2;
@@ -439,30 +467,10 @@ public class Wall {
 	
 		
 		gl.glEnd();
+
 	}
 	
-
-	public void addDoor(String id) {
-		float midX=(v1.getX()+v2.getX())/2;
-		float midY=(v1.getY()+v2.getY())/2;
-		Vertex c1 = new Vertex((v1.getX()+midX)/2,(v1.getY()+midY)/2);
-		Vertex c2 = new Vertex((v2.getX()+midX)/2,(v2.getY()+midY)/2);
-		o = new Door(id, c1, c2);		
-	}
-
-	public void addDoor(String id, float f, float g, float h, float i){
-		Vertex c1 = new Vertex(f,g);
-		Vertex c2 = new Vertex(h,i);
-		o = new Door(id, c1, c2);
-	}
 	
-	public void addWindow(String id) {
-		float midX=(v1.getX()+v2.getX())/2;
-		float midY=(v1.getY()+v2.getY())/2;
-		Vertex c1 = new Vertex((v1.getX()+midX)/2,(v1.getY()+midY)/2);
-		Vertex c2 = new Vertex((v2.getX()+midX)/2,(v2.getY()+midY)/2);
-		o = new Window(id, c1, c2);
-	}
 	
 }
 	
