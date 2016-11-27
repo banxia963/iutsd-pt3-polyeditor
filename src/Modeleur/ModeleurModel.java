@@ -14,8 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Blueprint.Room;
-import Blueprint.Vertex;
-import Blueprint.Wall;
 
 /** 
  * class ModeleurModel 

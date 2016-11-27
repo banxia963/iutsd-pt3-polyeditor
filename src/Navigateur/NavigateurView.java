@@ -28,7 +28,6 @@ import static com.jogamp.opengl.GL2ES1.GL_FOG_HINT;
 import static com.jogamp.opengl.GL2ES1.GL_FOG_MODE;
 import static com.jogamp.opengl.GL2ES1.GL_FOG_START;
 import static com.jogamp.opengl.GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
 import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
 import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHT1;
@@ -47,22 +46,19 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import Blueprint.Room;
-import Blueprint.Vertex;
-import Blueprint.Wall;
 
 @SuppressWarnings("serial")
 public class NavigateurView extends GLCanvas implements GLEventListener{
 	private GLU glu;
 
 	private NavigateurModel model;
-	int[] fogModes = { GL_EXP, GL_EXP2, GL_LINEAR }; // storage for 3 types of fogs
+	/*int[] fogModes = { GL_EXP, GL_EXP2, GL_LINEAR }; // storage for 3 types of fogs
 	int currFogFilter = 0;                           // which fog to use
-	float[] fogColor = { 0.0f, 0.0f, 0.0f, 0.0f };   // fog color
+	float[] fogColor = { 0.0f, 0.0f, 0.0f, 0.0f };   // fog color*/
 
 
 	// ** Constructeur par default */
@@ -92,7 +88,7 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // clear to the color of the fog
+		gl.glClearColor(0.8f, 0.8f, 0.8f, 1.0f); // clear to the color of the fog
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL_DEPTH_TEST);
 		gl.glDepthFunc(GL_LEQUAL);
@@ -107,12 +103,12 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		// Diffuse light location xyz (in front of the screen).
 		float[] lightDiffusePosion = {0.0f, 0.0f, -2.0f, 1.0f};
 
-		gl.glFogfv(GL_FOG_COLOR, fogColor, 0); // set fog color
+		/*gl.glFogfv(GL_FOG_COLOR, fogColor, 0); // set fog color
 	    gl.glFogf(GL_FOG_DENSITY, 0.35f);      // how dense will the fog be
 	    gl.glHint(GL_FOG_HINT, GL_DONT_CARE);  // fog hint value
 	    gl.glFogf(GL_FOG_START, 20.0f); // fog start depth
 	    gl.glFogf(GL_FOG_END, 20.0f);   // fog end depth
-	    gl.glEnable(GL_FOG);           // enables GL_FOG
+	    gl.glEnable(GL_FOG);           // enables GL_FOG*/
 
 		
 		 try {
@@ -163,7 +159,7 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 		// Player is at (posX, 0, posZ), Translate the scene to (-posX, 0, -posZ)
 		gl.glTranslatef(-model.getPosX(), -model.getWalkBias() - 0.5f, -model.getPosZ());
-		gl.glFogi(GL_FOG_MODE, fogModes[currFogFilter]); // Fog Mode
+		//gl.glFogi(GL_FOG_MODE, fogModes[currFogFilter]); // Fog Mode
 		// Lighting
 		if (model.getIsLigntOn()) {
 			gl.glEnable(GL_LIGHTING);
@@ -189,8 +185,9 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		}
 		//r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
 
-	     r.draw(gl);
-	     
+		r.draw(gl);
+	  
+
 	}
 	/**
 	 * Call-back handler for window re-size event. Also called when the drawable is

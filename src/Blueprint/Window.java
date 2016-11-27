@@ -73,7 +73,7 @@ public class Window extends Open {
 		}
 		gl.glBegin(GL2.GL_QUADS);
 		
-			gl.glColor3f(1.0f, 0.0f, 0.0f); 
+			gl.glColor3f(0.5f, 0.5f, 0.0f); 
 			gl.glVertex3f(X1/100, 2.0f, Z1/100);
 			gl.glVertex3f(X2/100, 2.0f, Z2/100);
 			gl.glVertex3f(X2/100, 1.5f, Z2/100);
@@ -104,7 +104,7 @@ public class Window extends Open {
 			gl.glVertex3f(X4/100, 1.5f, Z4/100);
 			gl.glVertex3f(X3/100, 1.5f, Z3/100);
 
-			/*gl.glVertex3f(X1/100, 0.5f, Z1/100);
+			gl.glVertex3f(X1/100, 0.5f, Z1/100);
 			gl.glVertex3f(X2/100, 0.5f, Z2/100);
 			gl.glVertex3f(X2/100, 0.0f, Z2/100);
 			gl.glVertex3f(X1/100, 0.0f, Z1/100);
@@ -132,7 +132,7 @@ public class Window extends Open {
 			gl.glVertex3f(X1/100, 0.0f, Z1/100);
 			gl.glVertex3f(X2/100, 0.0f, Z2/100);
 			gl.glVertex3f(X4/100, 0.0f, Z4/100);
-			gl.glVertex3f(X3/100, 0.0f, Z3/100);*/
+			gl.glVertex3f(X3/100, 0.0f, Z3/100);
 
 		gl.glEnd();
 		
@@ -143,7 +143,6 @@ public class Window extends Open {
 	public void move(float x1, float y1, float x2, float y2) {
 		v1.move(x1, y1);
 		v2.move(x2, y2);
-		
 	}
 
 }

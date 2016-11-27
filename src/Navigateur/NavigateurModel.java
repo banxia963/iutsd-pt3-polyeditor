@@ -14,9 +14,6 @@ import java.awt.MenuItem;
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.util.texture.Texture;
-
-import Blueprint.Room;
-import Blueprint.Wall;
 public class NavigateurModel {
 
 	protected MenuItem openItem= new MenuItem("Ouvrir");
