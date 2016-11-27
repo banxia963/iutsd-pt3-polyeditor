@@ -66,24 +66,11 @@ public class Wall {
 		selected = !selected;	
 	}
 	
-	public void select(int x, int y){
-		if(selected) {
-			selected=!selected;
-			return;
-			}
-		
-		float disX = v2.getX()-v1.getX();
-		float disY = v2.getY()-v1.getY();
-		float disXY = (float) Math.sqrt(disX*disX+disY*disY);
-		float supX = r * (disX/disXY);
-		float supY = r * (disY/disXY);
-		
-		Line2D l = new Line2D.Float(v1.getX()+r+supX*2, v1.getY()+r+supY*2, v2.getX()+r-supX*2, v2.getY()+r-supY*2);
-		
-		float maxX=v1.getX()+r+supX*2;
-		float minX=v2.getX()+r-supX*2;
-		float maxY=v1.getY()+r+supY*2;
-		float minY=v2.getY()+r-supY*2;
+	public boolean between(int x, int y, float x1, float y1, float x2, float y2){
+		float maxX=x1;
+		float minX=x2;
+		float maxY=y1;
+		float minY=y2;
 		
 		if(maxX<minX){
 			float tmp=maxX;
@@ -103,17 +90,104 @@ public class Wall {
 		if(minX==maxX) betweenX=true;
 		if(maxY==minY) betweenY=true;
 		
-		if (l.ptLineDist(x, y) <= r && betweenX && betweenY){
-			selected=true;			
-		}
-		else{
-			selected=false;
-		}
+		return betweenX && betweenY;
+	}
+	public void select(int x, int y){
+		if(selected) {
+			selected=!selected;
+			return;
+			}
 		
+		float disX = v2.getX()-v1.getX();
+		float disY = v2.getY()-v1.getY();
+		float disXY = (float) Math.sqrt(disX*disX+disY*disY);
+		float supX = r * (disX/disXY);
+		float supY = r * (disY/disXY);
+		
+		Line2D l = new Line2D.Float(v1.getX()+r+supX*2, v1.getY()+r+supY*2, v2.getX()+r-supX*2, v2.getY()+r-supY*2);
+		
+		if (o == null){
+			
+			float maxX=v1.getX()+r+supX*2;
+			float minX=v2.getX()+r-supX*2;
+			float maxY=v1.getY()+r+supY*2;
+			float minY=v2.getY()+r-supY*2;
+			
+			if(maxX<minX){
+				float tmp=maxX;
+				maxX=minX;
+				minX=tmp;
+			}
+			
+			if(maxY<minY){
+				float tmp=maxY;
+				maxY=minY;
+				minY=tmp;
+			}
+			
+			boolean betweenX= x <= maxX && x >= minX ;
+			boolean betweenY= y <= maxY && y >= minY;
+			
+			if(minX==maxX) betweenX=true;
+			if(maxY==minY) betweenY=true;
+			
+			if (l.ptLineDist(x, y) <= r && betweenX && betweenY){
+				selected=true;			
+			}
+			else{
+				selected=false;
+			}
+		
+		} else{
+			if(l.ptLineDist(x,y) <= r && ( between(x,y,v1.getX()+r+supX*2,v1.getY()+r+supY*2,o.getV1().getX()+r-supX*2,o.getV1().getY()+r-supY*2)
+										|| between(x,y,o.getV1().getX()+r+supX*2,o.getV1().getY()+r+supY*2,o.getV2().getX()+r-supX*2,o.getV2().getY()+r-supY*2)
+										|| between(x,y,o.getV2().getX()+r+supX*2,o.getV2().getY()+r+supY*2,v2.getX()+r-supX*2,v2.getY()+r-supY*2)
+										)){
+				selected = true;
+			}else{
+				selected=false;
+			}
+		}
 	}
 	
-	public void move(int x, int y){
+	public float[] move(float x, float y){
+		Line2D l = new Line2D.Float(v1.getX()+r, v1.getY()+r, v2.getX()+r, v2.getY()+r);
+		float v1x,v1y,v2x,v2y;
 		
+		if (v1.getX()==v2.getX()){
+			v1x=x; 
+			v1y=v1.getY();
+			v2x=x; 
+			v2y=v2.getY();
+		}
+		else if (v1.getY()==v2.getY()){
+			v1x=v1.getX();
+			v1y=y;
+			v2x=v2.getX();
+			v2y=y;
+		}
+		else {
+			
+			float a1=(v2.getY()-v1.getY())/(v2.getX()-v1.getX());
+			float b1=v1.getY()-a1*v1.getX();
+			float a2=-1/a1;
+			float b2=y-a2*x;
+			float vx=(b2-b1)/(a1-a2);
+			float vy=vx*a1+b1;
+			float mx=x-vx;
+			float my=y-vy;
+			v1x=v1.getX()+mx;
+			v1y=v1.getY()+my;
+			v2x=v2.getX()+mx;
+			v2y=v2.getY()+my;
+	
+		}
+		v1.move(v1x, v1y);
+		v2.move(v2x, v2y);
+		
+		float[] list= {v1x,v1y,v2x,v2y};
+		
+		return list;
 	}
 	
 	public void draw(Graphics g) {
@@ -216,7 +290,7 @@ public class Wall {
 			gl.glVertex3f(X3/100, 2.0f, Z3/100);
 			gl.glVertex3f(X4/100, 2.0f, Z4/100);
 			gl.glVertex3f(X4/100, 0.0f, Z4/100);
-			gl.glVertex3f(X2/100, 0.0f, Z2/100);
+			gl.glVertex3f(X3/100, 0.0f, Z3/100);
 
 			gl.glVertex3f(X1/100, 0.0f, Z1/100);
 			gl.glVertex3f(X2/100, 0.0f, Z2/100);
@@ -253,15 +327,16 @@ public class Wall {
 	}
 
 	public void draw(GL2 gl, float tT, float tB, float tL, float tR){
-		float weight = 20f;
+		float weight = 1f;
 		float b = 0;
 		float x =0;
 		float z =0;
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
 		if(v1.getY()-v2.getY()!=0){
 		b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
-		x = (float) ((weight/2)*Math.sqrt(1/(1-b*b)));
-		z = (float) ((weight/2)*Math.sqrt(b*b/(1-b*b)));
+		x = (float) ((weight/2)*Math.sqrt(1/(1+b*b))); 
+		z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
+		
 		
 		if(b> 0){
 			X1= v1.getX()+x;
@@ -317,50 +392,50 @@ public class Wall {
 		gl.glTexCoord2f(tL, tT);
 		gl.glVertex3f(X1/100, 0.0f, Z1/100);
 		
-		gl.glTexCoord2f(tL,tB);
+		gl.glTexCoord2f(tR,tB);
 		gl.glVertex3f(X1/100, 2.0f, Z1/100);
-		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X3/100, 2.0f, Z3/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X3/100, 0.0f, Z3/100);
+		gl.glVertex3f(X3/100, 2.0f, Z3/100);
 		gl.glTexCoord2f(tL, tT);
+		gl.glVertex3f(X3/100, 0.0f, Z3/100);
+		gl.glTexCoord2f(tL, tB);
 		gl.glVertex3f(X1/100, 0.0f, Z1/100);
 	
-		gl.glTexCoord2f(tL,tB);
+		gl.glTexCoord2f(tL,tT);
+		gl.glVertex3f(X2/100, 2.0f, Z2/100);
+		gl.glTexCoord2f(tL, tB);
+		gl.glVertex3f(X4/100, 2.0f, Z4/100);
+		gl.glTexCoord2f(tR, tB);
+		gl.glVertex3f(X4/100, 0.0f, Z4/100);
+		gl.glTexCoord2f(tR, tT);
+		gl.glVertex3f(X2/100, 0.0f, Z2/100);
+	
+		gl.glTexCoord2f(tR,tT);
+		gl.glVertex3f(X3/100, 2.0f, Z3/100);
+		gl.glTexCoord2f(tL, tT);
+		gl.glVertex3f(X4/100, 2.0f, Z4/100);
+		gl.glTexCoord2f(tL, tB);
+		gl.glVertex3f(X4/100, 0.0f, Z4/100);
+		gl.glTexCoord2f(tR, tB);
+		gl.glVertex3f(X3/100, 0.0f, Z3/100);
+	
+		gl.glTexCoord2f(tR,tT);
+		gl.glVertex3f(X1/100, 0.0f, Z1/100);
+		gl.glTexCoord2f(tL, tT);
+		gl.glVertex3f(X2/100, 0.0f, Z2/100);
+		gl.glTexCoord2f(tL, tB);
+		gl.glVertex3f(X4/100, 0.0f, Z4/100);
+		gl.glTexCoord2f(tR, tB);
+		gl.glVertex3f(X3/100, 0.0f, Z3/100);
+		
+		gl.glTexCoord2f(tL,tT);
+		gl.glVertex3f(X1/100, 2.0f, Z1/100);
+		gl.glTexCoord2f(tL, tB);
 		gl.glVertex3f(X2/100, 2.0f, Z2/100);
 		gl.glTexCoord2f(tR, tB);
 		gl.glVertex3f(X4/100, 2.0f, Z4/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X4/100, 0.0f, Z4/100);
-		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X2/100, 0.0f, Z2/100);
-	
-		gl.glTexCoord2f(tL,tB);
 		gl.glVertex3f(X3/100, 2.0f, Z3/100);
-		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X4/100, 2.0f, Z4/100);
-		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X4/100, 0.0f, Z4/100);
-		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X2/100, 0.0f, Z2/100);
-	
-		gl.glTexCoord2f(tL,tB);
-		gl.glVertex3f(X1/100, 0.0f, Z1/100);
-		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X2/100, 0.0f, Z2/100);
-		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X3/100, 0.0f, Z3/100);
-		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X4/100, 0.0f, Z4/100);
-	
-		gl.glTexCoord2f(tL,tB);
-		gl.glVertex3f(X1/500, 2.0f, Z1/500);
-		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X2/500, 2.0f, Z2/500);
-		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X3/500, 2.0f, Z3/500);
-		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X4/500, 2.0f, Z4/500);
 	
 		
 		gl.glEnd();
@@ -381,4 +456,14 @@ public class Wall {
 		o = new Door(id, c1, c2);
 	}
 	
+	public void addWindow(String id) {
+		float midX=(v1.getX()+v2.getX())/2;
+		float midY=(v1.getY()+v2.getY())/2;
+		Vertex c1 = new Vertex((v1.getX()+midX)/2,(v1.getY()+midY)/2);
+		Vertex c2 = new Vertex((v2.getX()+midX)/2,(v2.getY()+midY)/2);
+		o = new Window(id, c1, c2);
+	}
+	
 }
+	
+

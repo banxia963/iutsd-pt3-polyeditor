@@ -13,8 +13,8 @@ public class Window extends Open {
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		v1.draw(g);
+		v2.draw(g);
 	}
 
 	@Override

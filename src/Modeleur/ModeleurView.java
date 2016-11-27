@@ -24,8 +24,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.jogamp.opengl.util.texture.Texture;
-
 /** 
  * class MoeleurView 
  * celui-ci construit l'interface de modeleur. 
@@ -36,10 +34,12 @@ public class ModeleurView extends JFrame {
 	/** ModeleurController qui gere les fonctions de souris */
 	private ModeleurController mc;
 	
-	//code Model
+	// les variables de tests
+	// Diriger et claser a la fin pour les mettre dans la class ModeleurModel
 	private JPanel bg, toolbar, options, save;
 	private Menu menu;
 	private Image demo;
+	
 	
 	
 	
@@ -48,6 +48,7 @@ public class ModeleurView extends JFrame {
 		mm = new ModeleurModel();
 		mc = new ModeleurController(mm);
 		
+		// bg contient le toolbar et le graphe
 		bg = new JPanel();
 		bg.setLayout(new BorderLayout(10,10));
 		bg.setBackground(ModeleurModel.GREY);
@@ -63,6 +64,7 @@ public class ModeleurView extends JFrame {
 		menu.setPreferredSize(new Dimension(130*2,420*2));
 		menu.addMouseListener(menu);
 		
+		// options contient les buttons
 		options = new JPanel();
 		options.setBackground(ModeleurModel.DARKGREY4);
 		options.setPreferredSize(new Dimension(120*2,50*2));
@@ -72,6 +74,7 @@ public class ModeleurView extends JFrame {
 		save.setBackground(ModeleurModel.DARKGREY2);
 		save.setPreferredSize(new Dimension(130*2,45*2));
 		
+		// le bouton d'enregistrement
 		Font font = new Font("Arial", Font.BOLD, 20);
 		mm.bSave = new JButton("ENREGISTRER");
 		mm.bSave.setFont(font);
@@ -98,7 +101,8 @@ public class ModeleurView extends JFrame {
 	
 	
 	/**
-	 * 
+	 * class interne Menu
+	 * celui-ci dessine le Menu qui continet les options de tratement de graphe
 	 * */
 	class Menu extends JPanel implements MouseListener{
 		Menu(){
@@ -120,8 +124,21 @@ public class ModeleurView extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			//mm.room.addVertex();
-			mm.room.addDoor("Door");
+			int x = e.getX();
+			int y = e.getY();
+
+			if ( 20 < x && x < 20+110*2){
+				if (y > 20 && y < 110){
+					mm.room.addVertex();
+				}
+				else if (y>110 && y<200){
+					mm.room.addDoor("Door");
+				}
+				else if (y>200 && y<290){
+					mm.room.addWindow("Window");
+				}
+			}
+			
 			mm.graph.validate();
 			mm.graph.repaint();
 		}

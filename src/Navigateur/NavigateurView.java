@@ -180,6 +180,8 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 			e.printStackTrace();
 		}
 		r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+
+	    // r.draw(gl);
 	     
 	}
 	/**

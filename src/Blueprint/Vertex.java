@@ -35,6 +35,10 @@ public class Vertex {
 		return (float) Math.sqrt((this.x-x)*(this.x-x)+(this.y-y)*(this.y-y));
 	}
 	
+	public float VtDisVt(Vertex v){
+		return (float) Math.sqrt((this.x-v.getX())*(this.x-v.getX())+(this.y-v.getY())*(this.y-v.getY()));
+	}
+	
 	public void select(){
 		selected=!selected;
 	}
@@ -57,7 +61,7 @@ public class Vertex {
 		}
 	}
 	
-	public void move(int x, int y){
+	public void move(float x, float y){
 		this.x = x;
 		this.y = y;
 	}

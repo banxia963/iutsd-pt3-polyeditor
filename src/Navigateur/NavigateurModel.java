@@ -35,17 +35,17 @@ public class NavigateurModel {
 
 	private static boolean isLightOn = false;
 
-	/** retourner le coordonn®¶e de X */
+	/** retourner le coordonn√©e de X */
 	public float getPosX(){
 		return posX;
 	}
 	
-	/** retourner le coordonn®¶e de Z */
+	/** retourner le coordonn√©e de Z */
 	public float getPosZ(){
 		return posZ;
 	}
 	
-	/** retourner le coordonn®¶e de Y */
+	/** retourner le coordonn√©e de Y */
 	public float getHeadingY(){
 		return headingY;
 	}
@@ -80,27 +80,27 @@ public class NavigateurModel {
 		return walkBiasAngle;
 	}
 	
-	/** m®¶thode de tourner ®§ gauche*/
+	/** m√©thode de tourner √† gauche*/
 	public void turnLeft(){
 		headingY += turnIncrement;
 	}
 
-	/** m®¶thode de tourner ®§ droit*/
+	/** √©√®thode de tourner √† droit*/
 	public void turnRight(){
 		headingY -= turnIncrement;
 	}
 	
-	/** l'®¶tat de la lumi®®re, retourner True si la lumi®®re est allum®¶, False si la lumi®®re est ®¶tendre*/ 
+	/** l'√©tat de la lumi√®re, retourner True si la lumi√®re est allum√©, False si la lumi√®re est √©tendre*/ 
 	public boolean getIsLigntOn(){
 		return isLightOn;
 	}
 	
-	/** m®¶thode de allumer la lumi®®re*/ 
+	/** m√©thode de allumer la lumi√®re*/ 
 	public void turnLight(){
 		isLightOn = !isLightOn;
 	}
 	
-	/** m®¶thode de bouger en avant */
+	/** m√©thode de bouger en avant */
 	public void moveIn(){
 		posX -= (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
 		posZ -= (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
@@ -108,7 +108,7 @@ public class NavigateurModel {
 		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
 	}
 	
-	/** m®¶thode de bouger en arri®®re*/
+	/** m¬®¬¶thode de bouger en arri√®re*/
 	public void moveOut() {
 		posX += (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
 		posZ += (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;
@@ -116,12 +116,12 @@ public class NavigateurModel {
 		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
 	}
 	
-	/** m®¶thode de regarder en haut*/
+	/** m√©thode de regarder en haut*/
 	public void lookUp(){
 		lookUpAngle -= lookUpIncrement;
 	}
 	
-	/** m®¶thode de regarder en bas */
+	/** m√©thode de regarder en bas */
 	public void lookDown() {
 		lookUpAngle += lookUpIncrement;
 	}

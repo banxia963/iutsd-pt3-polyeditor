@@ -17,10 +17,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.texture.Texture;
 
 public class Room {
 	private ArrayList<Wall> walls = new ArrayList();
@@ -65,12 +65,20 @@ public class Room {
 	}
 	
 	public void addDoor(String id){
-		
 		for(Wall w: walls){
 			if(w.isSelected()){
 				w.addDoor(id);
 			}
 		}
+	}
+	
+	public void addWindow(String id) {
+		for(Wall w: walls){
+			if(w.isSelected()){
+				w.addWindow(id);
+			}
+		}
+		
 	}
 	
 	public void draw(Graphics g){
@@ -84,11 +92,37 @@ public class Room {
 			w.draw(gl);
 		}	
 	}
-	
 	public void draw(GL2 gl, float tT, float tB, float tL, float tR){
 		for (Wall w : walls){
 			w.draw(gl, tT,  tB,  tL, tR);
 		}	
+		gl.glBegin(GL2.GL_POLYGON);
+		for(Wall w : walls){
+			gl.glVertex3f(w.getV1().getX()/100, 0.0f, w.getV1().getY()/100);
+			}
+		gl.glEnd();
+		gl.glBegin(GL2.GL_POLYGON);
+		for(Wall w : walls){
+			gl.glVertex3f(w.getV1().getX()/100, 2.0f, w.getV1().getY()/100);
+			
+			}
+		gl.glEnd();
+	}
+	
+	public Wall nextWall(Wall w){
+		int n=walls.indexOf(w);
+		if(n==walls.size()-1){
+			return walls.get(0);
+		}
+		return walls.get(n+1);
+	}
+	
+	public Wall lastWall(Wall w){
+		int n=walls.indexOf(w);
+		if(n==0){
+			return walls.get(walls.size()-1);
+		}
+		return walls.get(n-1);
 	}
 	
 	public void write() throws IOException{
@@ -135,8 +169,7 @@ public class Room {
 	         id = in.readLine();
 	         String line;
 	         while ((line = in.readLine()) != null){
-	        	 @SuppressWarnings("resource")
-				Scanner scanner = new Scanner(line).useDelimiter(" ");
+	        	 Scanner scanner = new Scanner(line).useDelimiter(" ");
 	        	 walls.add(new Wall(new Vertex(scanner.nextFloat(),scanner.nextFloat()),new Vertex(scanner.nextFloat(),scanner.nextFloat())));
 	        	 if (scanner.hasNext()){
 	        		 walls.get(walls.size()-1).addDoor(scanner.next(), scanner.nextFloat(), scanner.nextFloat(),scanner.nextFloat(),scanner.nextFloat());
@@ -147,4 +180,6 @@ public class Room {
 				in.close();
 		}	
 	}
+
+	
 }
