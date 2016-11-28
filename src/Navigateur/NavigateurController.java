@@ -85,7 +85,7 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 			String dirPath = model.openDia.getDirectory();  
 			String fileName = model.openDia.getFile(); 
 			File file = new File(dirPath,fileName);  	
-			Room r= new Room(4, "Rectangle");	
+			Room r= new Room();	
 			try {
 				r.read(fileName);
 			} catch (IOException e1) {

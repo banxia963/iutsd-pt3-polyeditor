@@ -59,4 +59,8 @@ public abstract class Open {
 
 	public abstract void draw(GL2 gl);
 
-}
+	public abstract void draw(GL2 gl, float tT, float tB, float tL, float tR);
+		
+	}
+
+

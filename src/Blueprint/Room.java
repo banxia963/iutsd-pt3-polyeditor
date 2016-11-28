@@ -92,15 +92,17 @@ public class Room {
 		for (Wall w : walls){
 			w.draw(gl);
 		}
-		/*gl.glBegin(GL2.GL_POLYGON);
+		gl.glBegin(GL2.GL_POLYGON);
 		gl.glColor3f(0.8f, 0.3f, 0.8f);
 			for (Wall w: walls){
 				gl.glVertex3f(w.getV1().getX()/100, 0.0f, w.getV1().getY()/100);
 			}
-		gl.glEnd();*/
+		gl.glEnd();
 		gl.glBegin(GL2.GL_POLYGON);
+		gl.glColor3f(0.8f, 0.3f, 0.8f);
 		for(Wall w : walls){
-			gl.glVertex3f(w.getV1().getX()/100, 2.0f, w.getV1().getY()/100);
+			
+			gl.glVertex3f(w.getV1().getX()/100, 1.0f, w.getV1().getY()/100);
 
 			}
 		gl.glEnd();
@@ -119,7 +121,7 @@ public class Room {
 		
 		gl.glBegin(GL2.GL_POLYGON);
 		for(Wall w : walls){
-			gl.glVertex3f(w.getV1().getX()/100, 2.0f, w.getV1().getY()/100);
+			gl.glVertex3f(w.getV1().getX()/100, 1.0f, w.getV1().getY()/100);
 
 			}
 		gl.glEnd();
@@ -188,10 +190,11 @@ public class Room {
 	        	 Scanner scanner = new Scanner(line).useDelimiter(" ");
 	        	 walls.add(new Wall(new Vertex(scanner.nextFloat(),scanner.nextFloat()),new Vertex(scanner.nextFloat(),scanner.nextFloat())));
 	        	 if (scanner.hasNext()){
-	        		 if(scanner.next().contains("Door")){
-	        			 walls.get(walls.size()-1).addDoor(scanner.next(), scanner.nextFloat(), scanner.nextFloat(),scanner.nextFloat(),scanner.nextFloat());
-	        		 } else if (scanner.next().contains("Window")){
-	        			 walls.get(walls.size()-1).addWindow(scanner.next(), scanner.nextFloat(), scanner.nextFloat(),scanner.nextFloat(),scanner.nextFloat());
+	        		 String id=scanner.next();
+	        		 if(id.startsWith("Door")){
+	        			 walls.get(walls.size()-1).addDoor(id, scanner.nextFloat(), scanner.nextFloat(),scanner.nextFloat(),scanner.nextFloat());
+	        		 } else if (id.startsWith("Window")){
+	        			 walls.get(walls.size()-1).addWindow(id, scanner.nextFloat(), scanner.nextFloat(),scanner.nextFloat(),scanner.nextFloat());
 	        		 }
 	        	 }
 	         } 
