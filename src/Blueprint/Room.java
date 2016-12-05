@@ -50,19 +50,21 @@ public class Room {
 		
 		for(Wall w: walls){
 			if(w.isSelected()){    //il faut verifier si Open dans le mur est NULL
-				v1 = w.getV1();
+				v1=w.getV1();
 				v2 = w.getV2();	
 				tmp=w;
 			}
 		}
-		v3 = new Vertex((v1.getX()+v2.getX())/2, (v1.getY()+v2.getY())/2);
-		v4 = new Vertex((v1.getX()+v2.getX())/2, (v1.getY()+v2.getY())/2);
-		int index = walls.indexOf(tmp);
-		walls.remove(tmp);
-		walls.add(index,new Wall(v4, v2));
-		walls.add(index,new Wall(v1, v3));
-		v3.select();
-		v4.select();
+		if (tmp != null){
+			v3 = new Vertex((v1.getX()+v2.getX())/2, (v1.getY()+v2.getY())/2);
+			v4 = new Vertex((v1.getX()+v2.getX())/2, (v1.getY()+v2.getY())/2);
+			int index = walls.indexOf(tmp);
+			walls.remove(tmp);
+			walls.add(index,new Wall(v4, v2));
+			walls.add(index,new Wall(v1, v3));
+			v3.select();
+			v4.select();
+		}
 	}
 	
 	public void addDoor(String id){

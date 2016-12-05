@@ -38,7 +38,6 @@ public class NavigateurModel {
 
 	private float walkBias = 0;
 	private float walkBiasAngle = 0;
-
 	private static boolean isLightOn = false;
 
 	/** retourner le coordonnée de X */
@@ -114,7 +113,7 @@ public class NavigateurModel {
 		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
 	}
 	
-	/** m¨¦thode de bouger en arrière*/
+	/** méthode de bouger en arrière*/
 	public void moveOut() {
 		posX += (float)Math.sin(Math.toRadians(headingY)) * moveIncrement;
 		posZ += (float)Math.cos(Math.toRadians(headingY)) * moveIncrement;

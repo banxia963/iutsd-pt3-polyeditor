@@ -295,6 +295,7 @@ public class Wall {
 		float b = 0;
 		float x =0;
 		float z =0;
+		
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
 		
 		if(o==null){
@@ -302,7 +303,6 @@ public class Wall {
 				b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
 				x = (float) ((weight/2)*Math.sqrt(1/(1+b*b)));
 				z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
-			
 				if(b> 0){
 					X1= v1.getX()+x;
 					X2= v1.getX()-x;
@@ -347,23 +347,29 @@ public class Wall {
 
 			
 			gl.glBegin(GL2.GL_QUADS);
-				gl.glColor3f(1.0f, 0.0f, 0.0f);
-				gl.glVertex3f(X1/100, 1.0f, Z1/100);			
-				gl.glVertex3f(X2/100, 1.0f, Z2/100);				
-				gl.glVertex3f(X2/100, 0.0f, Z2/100);				
-				gl.glVertex3f(X1/100, 0.0f, Z1/100);
-								
-				gl.glVertex3f(X1/100, 1.0f, Z1/100);				
-				gl.glVertex3f(X3/100, 1.0f, Z3/100);			
-				gl.glVertex3f(X3/100, 0.0f, Z3/100);			
-				gl.glVertex3f(X1/100, 0.0f, Z1/100);
-				
-				gl.glVertex3f(X2/100, 1.0f, Z2/100);				
-				gl.glVertex3f(X4/100, 1.0f, Z4/100);				
-				gl.glVertex3f(X4/100, 0.0f, Z4/100);				
+
+			
+				gl.glVertex3f(X1/100, 1.0f, Z1/100);
+				gl.glVertex3f(X2/100, 1.0f, Z2/100);
 				gl.glVertex3f(X2/100, 0.0f, Z2/100);
+
+				gl.glVertex3f(X1/100, 0.0f, Z1/100);
 				
-				gl.glVertex3f(X3/100, 1.0f, Z3/100);	
+
+				gl.glVertex3f(X1/100, 1.0f, Z1/100);
+				gl.glVertex3f(X3/100, 1.0f, Z3/100);
+				gl.glVertex3f(X3/100, 0.0f, Z3/100);
+				gl.glVertex3f(X1/100, 0.0f, Z1/100);
+			
+				gl.glVertex3f(X2/100, 1.0f, Z2/100);
+				gl.glVertex3f(X4/100, 1.0f, Z4/100);
+				gl.glVertex3f(X4/100, 0.0f, Z4/100);
+
+				gl.glVertex3f(X2/100, 0.0f, Z2/100);
+
+			
+				gl.glVertex3f(X3/100, 1.0f, Z3/100);
+
 				gl.glVertex3f(X4/100, 1.0f, Z4/100);
 				gl.glVertex3f(X4/100, 0.0f, Z4/100);
 				gl.glVertex3f(X3/100, 0.0f, Z3/100);
@@ -375,8 +381,10 @@ public class Wall {
 				
 				gl.glVertex3f(X1/100, 1.0f, Z1/100);
 				gl.glVertex3f(X2/100, 1.0f, Z2/100);
-				gl.glVertex3f(X4/100, 1.0f, Z4/100);				
+
+				gl.glVertex3f(X4/100, 1.0f, Z4/100);
 				gl.glVertex3f(X3/100, 1.0f, Z3/100);
+			
 
 			gl.glEnd();
 			

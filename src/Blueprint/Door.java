@@ -30,6 +30,8 @@ public class Door extends Open {
 	@Override
 	public void draw(GL2 gl) {
 		float weight = 10f;
+		float doorheight_haut = 1.0f;
+		float doorheight_bas = 0.75f;
 		float b = 0;
 		float x =0;
 		float z =0;
@@ -85,36 +87,42 @@ public class Door extends Open {
 		
 		gl.glBegin(GL2.GL_QUADS);
 		
-		//gl.glColor3f(0.0f, 0.0f, 1.0f);
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
-		
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
-	
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
-	
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
 
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
+			gl.glColor3f(1.0f, 0.0f, 0.0f); 
+			gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
+			gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
+			gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
+			gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
+			
+			gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
+			gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
+			gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
+			gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
+
 		
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
+
+			gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
+			gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
+			gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
+			gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
+		
+			gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
+			gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
+			gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
+			gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
+
+
+
+			gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
+			gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
+			gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
+			gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
+			
+			gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
+			gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
+			gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
+			gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
+
 
 		gl.glEnd();
 	}
@@ -130,6 +138,8 @@ public class Door extends Open {
 	public void draw(GL2 gl, float tT, float tB, float tL, float tR) {
 		// TODO Auto-generated method stub
 		float weight = 10f;
+		float doorheight_haut = 1.0f;
+		float doorheight_bas = 0.75f;
 		float b = 0;
 		float x =0;
 		float z =0;
@@ -187,58 +197,58 @@ public class Door extends Open {
 		gl.glBegin(GL2.GL_QUADS);
 		
 		gl.glTexCoord2f(tL,tB);
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
 		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
 		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
 		
 		gl.glTexCoord2f(tR,tB);
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
 		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
 		gl.glTexCoord2f(tL, tB);
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
 	
 		gl.glTexCoord2f(tL,tT);
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
 		gl.glTexCoord2f(tL, tB);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
 		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
 	
 		gl.glTexCoord2f(tR,tT);
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
 		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
 		gl.glTexCoord2f(tL, tB);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
 		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
 	
 		gl.glTexCoord2f(tR,tT);
-		gl.glVertex3f(X1/100, 0.75f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_bas, Z1/100);
 		gl.glTexCoord2f(tL, tT);
-		gl.glVertex3f(X2/100, 0.75f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_bas, Z2/100);
 		gl.glTexCoord2f(tL, tB);
-		gl.glVertex3f(X4/100, 0.75f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_bas, Z4/100);
 		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X3/100, 0.75f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_bas, Z3/100);
 		
 		gl.glTexCoord2f(tL,tT);
-		gl.glVertex3f(X1/100, 1.0f, Z1/100);
+		gl.glVertex3f(X1/100, doorheight_haut, Z1/100);
 		gl.glTexCoord2f(tL, tB);
-		gl.glVertex3f(X2/100, 1.0f, Z2/100);
+		gl.glVertex3f(X2/100, doorheight_haut, Z2/100);
 		gl.glTexCoord2f(tR, tB);
-		gl.glVertex3f(X4/100, 1.0f, Z4/100);
+		gl.glVertex3f(X4/100, doorheight_haut, Z4/100);
 		gl.glTexCoord2f(tR, tT);
-		gl.glVertex3f(X3/100, 1.0f, Z3/100);
+		gl.glVertex3f(X3/100, doorheight_haut, Z3/100);
 		gl.glEnd();
 		
 	}

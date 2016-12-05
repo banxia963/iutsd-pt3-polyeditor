@@ -8,8 +8,16 @@
 
 package Modeleur;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -33,18 +41,156 @@ public class ModeleurModel {
 	public static final Color WHITE = new Color(255, 255, 255); 
 	
 	/** Le Graphe qui dessine le Blueprint */
-	protected Graph graph = new Graph();
+	protected Graph graph;
 	
 	/** Le bouton d'enregistrement */
 	protected JButton bSave;
 	
 	/** Une entiere qui signifie le mode de dessiner: 1 - Chambre(Room) ; 2 - Couloir(Corridor) */
-	protected int mode=1;
+	protected int mode=0;
 	
-	// les variables qu'on definit pour le test
-	protected JPanel p1,p2;
-	protected JButton b1,b2,b3,b4;
+	protected JPanel bg, toolbar, optsMode, optsRoom, optsWall, save;
+	
+	protected JButton bRoom, bCorridor, bRectangle, bHexagon, bOctogon, bVertx, bDoor, bWindow;
+	
 	protected Room room = new Room(4,"Rectangle");
+	
+	/** rayon de Vertex */
+	protected float r=(float)25/2;
+	
+	/** Constructeur par default */
+	public ModeleurModel(){
+		Font font = new Font("Arial", Font.BOLD, 20);
+		GridBagConstraints g = new GridBagConstraints();
+		
+		optsMode = new JPanel(new GridBagLayout());
+		optsMode.setBackground(ModeleurModel.DARKGREY2);
+		optsMode.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bRoom= new JButton("CHAMBRE");
+		bRoom.setFont(font);
+		bRoom.setForeground(ModeleurModel.BLACK);
+		bRoom.setBackground(ModeleurModel.DARKGREY4);
+		bRoom.setPreferredSize(new Dimension(110*2,70));
+		bRoom.setFocusPainted(false);
+		
+		bCorridor = new JButton("COULOIR");
+		bCorridor.setFont(font);
+		bCorridor.setForeground(ModeleurModel.BLACK);
+		bCorridor.setBackground(ModeleurModel.DARKGREY4);
+		bCorridor.setPreferredSize(new Dimension(110*2,70));
+		bCorridor.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsMode.add(bRoom,g);
+		g.gridy = 2;
+		optsMode.add(bCorridor, g);
+		
+		optsRoom = new JPanel(new GridBagLayout());
+		optsRoom.setBackground(ModeleurModel.DARKGREY2);
+		optsRoom.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bRectangle= new JButton("RECTANGLE");
+		bRectangle.setFont(font);
+		bRectangle.setForeground(ModeleurModel.BLACK);
+		bRectangle.setBackground(ModeleurModel.DARKGREY4);
+		bRectangle.setPreferredSize(new Dimension(110*2,70));
+		bRectangle.setFocusPainted(false);
+		
+		bHexagon= new JButton("HEXAGONE");
+		bHexagon.setFont(font);
+		bHexagon.setForeground(ModeleurModel.BLACK);
+		bHexagon.setBackground(ModeleurModel.DARKGREY4);
+		bHexagon.setPreferredSize(new Dimension(110*2,70));
+		bHexagon.setFocusPainted(false);
+		
+		bOctogon= new JButton("OCTOGONE");
+		bOctogon.setFont(font);
+		bOctogon.setForeground(ModeleurModel.BLACK);
+		bOctogon.setBackground(ModeleurModel.DARKGREY4);
+		bOctogon.setPreferredSize(new Dimension(110*2,70));
+		bOctogon.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsRoom.add(bRectangle,g);
+		g.gridy = 2;
+		optsRoom.add(bHexagon,g);
+		g.gridy = 3;
+		optsRoom.add(bOctogon,g);
+		
+		optsWall = new JPanel(new GridBagLayout());
+		optsWall.setBackground(ModeleurModel.DARKGREY2);
+		optsWall.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bVertx= new JButton("+ POINT");
+		bVertx.setFont(font);
+		bVertx.setForeground(ModeleurModel.BLACK);
+		bVertx.setBackground(ModeleurModel.DARKGREY4);
+		bVertx.setPreferredSize(new Dimension(110*2,70));
+		bVertx.setFocusPainted(false);
+		
+		bDoor= new JButton("+ PORTE");
+		bDoor.setFont(font);
+		bDoor.setForeground(ModeleurModel.BLACK);
+		bDoor.setBackground(ModeleurModel.DARKGREY4);
+		bDoor.setPreferredSize(new Dimension(110*2,70));
+		bDoor.setFocusPainted(false);
+		
+		bWindow= new JButton("+ FENETRE");
+		bWindow.setFont(font);
+		bWindow.setForeground(ModeleurModel.BLACK);
+		bWindow.setBackground(ModeleurModel.DARKGREY4);
+		bWindow.setPreferredSize(new Dimension(110*2,70));
+		bWindow.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsWall.add(bVertx,g);
+		g.gridy = 2;
+		optsWall.add(bDoor,g);
+		g.gridy = 3;
+		optsWall.add(bWindow,g);
+		
+		bSave = new JButton("ENREGISTRER");
+		bSave.setFont(font);
+		bSave.setForeground(ModeleurModel.BLACK);
+		bSave.setBackground(ModeleurModel.DARKGREY4);
+		bSave.setPreferredSize(new Dimension(110*2,70));
+		bSave.setFocusPainted(false);
+		
+		// save contient bsave
+		save = new JPanel();
+		save.setBackground(ModeleurModel.DARKGREY2);
+		save.setPreferredSize(new Dimension(130*2,45*2));
+		save.add(bSave);
+		
+		// bg contient le toolbar et le graphe
+		bg = new JPanel();
+		bg.setLayout(new BorderLayout(10,10));
+		bg.setBackground(ModeleurModel.GREY);
+		bg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+		// toolbar contient menu et save
+		toolbar = new JPanel();
+		toolbar.setLayout(new BorderLayout(10,10));
+		toolbar.setBackground(ModeleurModel.DARKGREY2);
+		
+		graph = new Graph();
+		graph.setPreferredSize(new Dimension(535*2,340*2));
+	
+		//toolbar.add(menu, BorderLayout.CENTER);
+		toolbar.add(optsMode, BorderLayout.CENTER);
+		toolbar.add(save, BorderLayout.SOUTH);
+				
+		bg.add(graph, BorderLayout.CENTER);
+		bg.add(toolbar, BorderLayout.WEST);
+		
+	}
 	
 	/**
 	 * class interne Graph
