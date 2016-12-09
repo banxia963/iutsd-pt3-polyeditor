@@ -30,31 +30,30 @@ public class NavigateurMain extends JFrame {
 	/** longeur de canvas */
 	private static final int CANVAS_HEIGHT = 600;
 	/** frames par second de l'animateur */
-	private static final int FPS = 60;
+	
 	
 	/** Constructeur pour creer le container et l'animator*/
 	public NavigateurMain() {
 		// Creer le OpenGL rendering canvas
-		GLCanvas canvas = new GLCanvas(); // heavy-weight GLCanvas
-		canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+		 // heavy-weight GLCanvas
 		NavigateurModel model = new NavigateurModel();
 		NavigateurView renderer = new NavigateurView(model);
-		canvas.addGLEventListener(renderer);
-
+		model.canvas.addGLEventListener(renderer);
+		model.canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 		// Pour Handling KeyEvents
 		NavigateurController controller = new NavigateurController(model);
-		canvas.addKeyListener(controller);
-		canvas.setFocusable(true);
-		canvas.requestFocus();
+		model.canvas.addKeyListener(controller);
+		model.canvas.setFocusable(true);
+		model.canvas.requestFocus();
 
-		final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
+		
 
-		model.frame.getContentPane().add(canvas);
+		model.frame.getContentPane().add(model.canvas);
 		model.frame.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				new Thread() {
 					public void run() {
-						if (animator.isStarted()) animator.stop();
+						if (model.animator.isStarted()) model.animator.stop();
 						System.exit(0);
 					}
 				}.start();
@@ -85,7 +84,7 @@ public class NavigateurMain extends JFrame {
 		model.frame.setTitle(TITLE);
 		model.frame.pack();
 		model.frame.setVisible(true);
-		animator.start();
+		model.animator.start();
 		
 }	
 

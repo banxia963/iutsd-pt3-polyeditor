@@ -15,6 +15,7 @@ import static java.awt.event.KeyEvent.VK_L;
 import static java.awt.event.KeyEvent.VK_S;
 import static java.awt.event.KeyEvent.VK_UP;
 import static java.awt.event.KeyEvent.VK_W;
+import static java.awt.event.KeyEvent.VK_SPACE;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,8 +30,9 @@ import Blueprint.Room;
 
 
 
-public class NavigateurController implements KeyListener,ActionListener,MouseListener {
+public class NavigateurController implements KeyListener,ActionListener,MouseListener{
 	private NavigateurModel model;
+	private NavigateurView renderer;
 
 	public NavigateurController(NavigateurModel model){
 		this.model = model;
@@ -81,33 +83,40 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 		// TODO Auto-generated method stub 
 		Object source = e.getSource();
 		if ( source == model.openItem){
-			model.openDia.setVisible(true);  
-			String dirPath = model.openDia.getDirectory();  
-			String fileName = model.openDia.getFile(); 
-			File file = new File(dirPath,fileName);  	
-			Room r= new Room();	
-			try {
-				r.read(fileName);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		model.frame.repaint();
+			new Thread() {
+				public void run() {
+					if (model.animator.isStarted()){
+						model.animator.stop();
+						model.openDia.setVisible(true);  
+						String dirPath = model.openDia.getDirectory();  
+						String fileName = model.openDia.getFile(); 
+						model.filename=dirPath+fileName;
+						model.animator.start();
+					}
+				}
+			}.start();
 		}
-		
+
+
 		if(source == model.menutexture){
-			model.textureDia.setVisible(true);
-			String dirpath=model.textureDia.getDirectory();
-			String TextureName = model.textureDia.getFile();
-			model.textureFileName=(dirpath+"/"+TextureName);
-			System.out.println(model.textureFileName);
-			model.textureFileType=TextureName.substring(TextureName.lastIndexOf('.')+1);
-			model.frame.repaint();
+			new Thread() {
+				public void run() {
+					if (model.animator.isStarted()){
+						model.animator.stop();
+						model.textureDia.setVisible(true);
+						String dirpath=model.textureDia.getDirectory();
+						String TextureName = model.textureDia.getFile();
+						model.textureFileName=dirpath.replaceAll("\\\\", "/")+TextureName.replaceAll("\\\\", "/");
+						model.textureFileType=TextureName.substring(TextureName.lastIndexOf('.'));
+						model.animator.start();
+					}
+				}
+			}.start();
 		}
-		if ( source == model.closeItem){
+		if (source == model.closeItem){
 			System.exit(0);
 		}
-		
+
 	}
 
 	@Override

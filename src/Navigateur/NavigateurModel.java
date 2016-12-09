@@ -13,19 +13,30 @@ import java.awt.MenuItem;
 
 import javax.swing.JFrame;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLBase;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
+
+import jogamp.opengl.GLAutoDrawableBase;
 public class NavigateurModel {
+	private static final int FPS = 60;
 
 	protected MenuItem openItem= new MenuItem("Ouvrir");
-	final JFrame frame = new JFrame();	 
+	protected final JFrame frame = new JFrame();	 
 	protected MenuItem closeItem = new MenuItem("Exit"); 
 	protected FileDialog openDia=  new FileDialog(frame,"Ouvrir",FileDialog.LOAD);
 	protected MenuItem menutexture = new MenuItem("Texture");
 	protected FileDialog textureDia = new FileDialog(frame,"Texture",FileDialog.LOAD);
 	protected Texture texture;
-	protected String textureFileName= "images/crate.png";
+	protected String textureFileName ="images/nehe.png";
 	protected String textureFileType=".png";
 	protected float textureTop, textureBottom, textureLeft, textureRight;
+	protected GLCanvas canvas = new GLCanvas();
+	protected final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
+	protected String filename ;
 
 	private static float posX = 2;
 	private float posZ = 2;
@@ -120,6 +131,9 @@ public class NavigateurModel {
 		walkBiasAngle = (walkBiasAngle <=1.0f) ? 359.0f : walkBiasAngle - 10.0f;
 		walkBias = (float)Math.sin(Math.toRadians(walkBiasAngle)) / 20.0f;
 	}
+	
+	
+	
 	
 	/** méthode de regarder en haut*/
 	public void lookUp(){

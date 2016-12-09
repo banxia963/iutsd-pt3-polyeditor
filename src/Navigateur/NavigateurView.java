@@ -75,48 +75,22 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	public void init(GLAutoDrawable drawable) {
 	      GL2 gl = drawable.getGL().getGL2();      // get the OpenGL graphics context
 	      glu = new GLU();                         // get GL Utilities
-	      gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set background (clear) color
+	      gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
 	      gl.glClearDepth(1.0f);      // set clear depth value to farthest
 	      gl.glEnable(GL_DEPTH_TEST); // enables depth testing
 	      gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
 	      gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // best perspective correction
 	      gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
 		
-		 try {
-	         // Create a OpenGL Texture object from (URL, mipmap, file suffix)
-	         // Use URL so that can read from JAR and disk file.
-			 model.texture = TextureIO.newTexture(
-	               getClass().getClassLoader().getResource(model.textureFileName), // relative to project root 
-	               false, model.textureFileType);
-
-	         // Use linear filter for texture if image is larger than the original texture
-	         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	         // Use linear filter for texture if image is smaller than the original texture
-	         gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	         // Texture image flips vertically. Shall use TextureCoords class to retrieve
-	         // the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
-	         TextureCoords textureCoords = model.texture.getImageTexCoords();
-	         model.textureTop = textureCoords.top();
-	         model.textureBottom = textureCoords.bottom();
-	         model.textureLeft = textureCoords.left();
-	         model.textureRight = textureCoords.right();
-	      } catch (GLException e) {
-	         e.printStackTrace();
-	      } catch (IOException e) {
-	         e.printStackTrace();
-	      }
-		
-	
 	}
 	/** 
 	 * Called back by the animator to perform rendering
 	 * */
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		 GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
-	      gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-	      gl.glLoadIdentity();  // reset the model-view matrix
+		GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+		gl.glLoadIdentity();  // reset the model-view matrix
 
 		// Rotate up and down to look up and down
 		gl.glRotatef(model.getLookUpAngle(), 1.0f, 0, 0);
@@ -127,34 +101,75 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 		// Player is at (posX, 0, posZ), Translate the scene to (-posX, 0, -posZ)
 		gl.glTranslatef(-model.getPosX(), -model.getWalkBias() - 0.5f, -model.getPosZ());
-		
+		if(model.textureFileName!=null){
+			try {
+				
+				// Create a OpenGL Texture object from (URL, mipmap, file suffix)
+				// Use URL so that can read from JAR and disk file.
+				//System.out.println(model.textureFileName);
+				//System.out.println(model.textureFileType);
+				model.texture = TextureIO.newTexture(
+						getClass().getClassLoader().getResource(model.textureFileName), // relative to project root 
+						false, model.textureFileType);
+
+				// Use linear filter for texture if image is larger than the original texture
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				// Use linear filter for texture if image is smaller than the original texture
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+				// Texture image flips vertically. Shall use TextureCoords class to retrieve
+				// the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
+				TextureCoords textureCoords = model.texture.getImageTexCoords();
+				model.textureTop = textureCoords.top();
+				model.textureBottom = textureCoords.bottom();
+				model.textureLeft = textureCoords.left();
+				model.textureRight = textureCoords.right();
+			} catch (GLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		// Lighting
 		if (model.getIsLigntOn()) {
 			gl.glEnable(GL_LIGHTING);
 		} else {
 			gl.glDisable(GL_LIGHTING);
 		}
-		  // Enables this texture's target in the current GL context's state.
-	      model.texture.enable(gl);
-	        // same as gl.glEnable(texture.getTarget());
-	      // gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
-	      // Binds this texture to the current GL context.
-	      model.texture.bind(gl);  // same as gl.glBindTexture(texture.getTarget(), texture.getTextureObject());
-		// ----- creer des objets -----
-		
-
-		// first room
-		Room r=new Room();
-		try {
-			r.read("test.txt");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(model.texture!=null){
+			
+			// Enables this texture's target in the current GL context's state.
+			model.texture.enable(gl);
+			// same as gl.glEnable(texture.getTarget());
+			// gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+			// Binds this texture to the current GL context.
+			model.texture.bind(gl);  // same as gl.glBindTexture(texture.getTarget(), texture.getTextureObject());
+			// ----- creer des objets -----
 		}
-		r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
-		//r.draw(gl);
-	    // r.draw(gl);
-	     
+		// first room
+
+		Room r=new Room();
+		if(model.filename!=null){
+			try {
+				r.read(model.filename);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(model.texture!=null){
+				r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+				//System.out.println("1235465");
+			}
+			else{
+				r.draw(gl);
+
+
+			}
+			// r.draw(gl);
+		}
+
 	}
 	/**
 	 * Call-back handler for window re-size event. Also called when the drawable is
