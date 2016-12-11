@@ -23,6 +23,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
@@ -103,11 +105,22 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 				public void run() {
 					if (model.animator.isStarted()){
 						model.animator.stop();
-						model.textureDia.setVisible(true);
-						String dirpath=model.textureDia.getDirectory();
+						model.textureDia.setVisible(true);				
 						String TextureName = model.textureDia.getFile();
-						model.textureFileName=dirpath.replaceAll("\\\\", "/")+TextureName.replaceAll("\\\\", "/");
-						model.textureFileType=TextureName.substring(TextureName.lastIndexOf('.'));
+						model.textureFileName="images/"+TextureName;
+						model.textureFileName=TextureName.substring(TextureName.lastIndexOf('.'));
+						List<String> Key = new ArrayList<String>(model.texture.keySet());   
+						// mettre la condition de tous les textures en false
+						for(String s : Key){
+							if(renderer.getText().get(model.texture.get(s))){
+								renderer.getText().remove(s);
+								renderer.getText().put(s, false);
+							}
+						}
+						//charge la condition de texutre qu'on a choisi
+						renderer.getText().remove(model.textureFileName);
+						renderer.getText().put(model.textureFileName,true);
+						
 						model.animator.start();
 					}
 				}

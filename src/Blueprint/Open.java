@@ -12,10 +12,12 @@ import java.awt.Graphics;
 
 import com.jogamp.opengl.GL2;
 
+/** class Open */
 public abstract class Open {
 	protected String id, next=null;
 	protected Vertex v1,v2;
 	protected float r1,r2;
+	protected String nextOpen=null;
 	
 	public Open(String id, Vertex v1, Vertex v2){
 		this.id=id;

@@ -14,6 +14,7 @@ import com.jogamp.opengl.GL2;
 
 public class Door extends Open {
 	private Vertex midv;
+	private boolean entrant;
 
 	public Door(String id, Vertex v1, Vertex v2) {
 		super(id, v1, v2);

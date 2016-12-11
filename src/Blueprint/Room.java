@@ -22,9 +22,7 @@ import java.util.Scanner;
 
 import com.jogamp.opengl.GL2;
 
-public class Room {
-	private ArrayList<Wall> walls = new ArrayList();
-	private String id;
+public class Room extends Space {
 	
 	public Room(){
 		
@@ -65,6 +63,28 @@ public class Room {
 			v3.select();
 			v4.select();
 		}
+	}
+	
+	public void delVertex(){
+		Wall tmp =null;
+		Vertex v1=null;
+		for (Wall w:walls){
+			if(w.getV2().isSelected()){
+				tmp=w;
+				v1=w.getV1();
+			}
+		}
+		if (tmp != null){
+			Wall next = nextWall(tmp);
+			Vertex v2 = next.getV2();
+			int index = walls.indexOf(tmp);
+			walls.remove(tmp);
+			walls.add(index, new Wall(v1,v2));
+			walls.remove(next);
+			
+		}
+		
+		
 	}
 	
 	public void addDoor(String id){
@@ -145,11 +165,11 @@ public class Room {
 		return walls.get(n-1);
 	}
 	
-	public void write() throws IOException{
+	public void write(String filepath) throws IOException{
 		PrintWriter in = null;
 		try {
 	         in = new PrintWriter(
-	               new OutputStreamWriter(new FileOutputStream("test.txt")));
+	               new OutputStreamWriter(new FileOutputStream(filepath)));
 	         in.println(id);
 	         for(Wall w : walls){
 	        	 in.print(w.getV1().getX());

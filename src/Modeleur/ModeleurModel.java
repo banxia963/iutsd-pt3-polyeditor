@@ -11,6 +11,7 @@ package Modeleur;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -19,9 +20,12 @@ import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Blueprint.Corridor;
 import Blueprint.Room;
+import Blueprint.Space;
 
 /** 
  * class ModeleurModel 
@@ -49,11 +53,15 @@ public class ModeleurModel {
 	/** Une entiere qui signifie le mode de dessiner: 1 - Chambre(Room) ; 2 - Couloir(Corridor) */
 	protected int mode=0;
 	
-	protected JPanel bg, toolbar, optsMode, optsRoom, optsWall, save;
+	protected JPanel bg, toolbar, optsMode, optsRoom, optsWall, optsVertex, save;
 	
-	protected JButton bRoom, bCorridor, bRectangle, bHexagon, bOctogon, bVertx, bDoor, bWindow;
+	protected JButton bRoom, bCorridor, bRectangle, bHexagon, bOctogon, bVertex, bDoor, bWindow, bDelVertex;
+	
+	protected FileDialog saveDia =  new FileDialog(new JFrame(),"ENREGISTREMENT",FileDialog.SAVE);
 	
 	protected Room room = new Room(4,"Rectangle");
+	
+	protected Space s;
 	
 	/** rayon de Vertex */
 	protected float r=(float)25/2;
@@ -63,6 +71,7 @@ public class ModeleurModel {
 		Font font = new Font("Arial", Font.BOLD, 20);
 		GridBagConstraints g = new GridBagConstraints();
 		
+		// Options pour les modes
 		optsMode = new JPanel(new GridBagLayout());
 		optsMode.setBackground(ModeleurModel.DARKGREY2);
 		optsMode.setPreferredSize(new Dimension(130*2,420*2));
@@ -122,16 +131,17 @@ public class ModeleurModel {
 		g.gridy = 3;
 		optsRoom.add(bOctogon,g);
 		
+		// Options pour les murs
 		optsWall = new JPanel(new GridBagLayout());
 		optsWall.setBackground(ModeleurModel.DARKGREY2);
 		optsWall.setPreferredSize(new Dimension(130*2,420*2));
 		
-		bVertx= new JButton("+ POINT");
-		bVertx.setFont(font);
-		bVertx.setForeground(ModeleurModel.BLACK);
-		bVertx.setBackground(ModeleurModel.DARKGREY4);
-		bVertx.setPreferredSize(new Dimension(110*2,70));
-		bVertx.setFocusPainted(false);
+		bVertex= new JButton("+ POINT");
+		bVertex.setFont(font);
+		bVertex.setForeground(ModeleurModel.BLACK);
+		bVertex.setBackground(ModeleurModel.DARKGREY4);
+		bVertex.setPreferredSize(new Dimension(110*2,70));
+		bVertex.setFocusPainted(false);
 		
 		bDoor= new JButton("+ PORTE");
 		bDoor.setFont(font);
@@ -150,12 +160,30 @@ public class ModeleurModel {
 		g.gridx = 0;
 		g.gridy = 1;
 		g.insets= new Insets(10,0,10,0);
-		optsWall.add(bVertx,g);
+		optsWall.add(bVertex,g);
 		g.gridy = 2;
 		optsWall.add(bDoor,g);
 		g.gridy = 3;
 		optsWall.add(bWindow,g);
 		
+		// Options pour le vertex
+		optsVertex = new JPanel(new GridBagLayout());
+		optsVertex.setBackground(ModeleurModel.DARKGREY2);
+		optsVertex.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bDelVertex = new JButton("- POINT");
+		bDelVertex.setFont(font);
+		bDelVertex.setForeground(ModeleurModel.BLACK);
+		bDelVertex.setBackground(ModeleurModel.DARKGREY4);
+		bDelVertex.setPreferredSize(new Dimension(110*2,70));
+		bDelVertex.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsVertex.add(bDelVertex,g);
+		
+		// Options pour l'enregistrement
 		bSave = new JButton("ENREGISTRER");
 		bSave.setFont(font);
 		bSave.setForeground(ModeleurModel.BLACK);
@@ -200,8 +228,12 @@ public class ModeleurModel {
 		public void paintComponent (Graphics g) {
 			super.paintComponent(g);
 			this.setBackground(ModeleurModel.DARKGREY3);
-			if(mode==1) // mode pour dessiner le chambre
+			if(mode==1){ // mode pour dessiner le chambre
 				room.draw(g);
+			} else if (mode==2){
+				s=new Corridor();
+				s.draw(g);
+			}
 		}
 	}
 }

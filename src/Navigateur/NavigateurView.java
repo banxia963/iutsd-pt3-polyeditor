@@ -29,6 +29,10 @@ import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -36,6 +40,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -47,6 +52,11 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 	private NavigateurModel model;
 
+	//Tableau de texture qui contient des texture
+	private Texture[] texturebox=new Texture[3];
+	//nom du texture + un boolean qui determine la condition de texture(bind ou pas)
+	private HashMap<String,Boolean> text= new HashMap<String,Boolean>();
+
 
 	// ** Constructeur par default */
 	public NavigateurView(NavigateurModel model) {
@@ -56,7 +66,6 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 	// ----- implement methods declared in GLEventListener -----
 
-	
 
 	/**
 	 * Called back before the OpenGL context is destroyed. Release resource such as buffers.
@@ -73,15 +82,60 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	 * */
 	@Override
 	public void init(GLAutoDrawable drawable) {
-	      GL2 gl = drawable.getGL().getGL2();      // get the OpenGL graphics context
-	      glu = new GLU();                         // get GL Utilities
-	      gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
-	      gl.glClearDepth(1.0f);      // set clear depth value to farthest
-	      gl.glEnable(GL_DEPTH_TEST); // enables depth testing
-	      gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
-	      gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // best perspective correction
-	      gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
-		
+		GL2 gl = drawable.getGL().getGL2();      // get the OpenGL graphics context
+		glu = new GLU();                         // get GL Utilities
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
+		gl.glClearDepth(1.0f);      // set clear depth value to farthest
+		gl.glEnable(GL_DEPTH_TEST); // enables depth testing
+		gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
+		gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // best perspective correction
+		gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+		gl.glEnable (GL2.GL_TEXTURE_2D);
+		model.initTexture();
+		if(model.texture!=null){
+			List<String> Key = new ArrayList<String>(model.texture.keySet());   
+			System.out.println(model.texture.get(0));
+			System.out.println(Key.size());
+			for(int i=0;i<Key.size();i++){
+				try {
+					// Create a OpenGL Texture object from (URL, mipmap, file suffix)
+					// Use URL so that can read from JAR and disk file.
+					texturebox[i] = TextureIO.newTexture(
+							getClass().getClassLoader().getResource(Key.get(i)), // relative to project root 
+							false, model.texture.get(i));		
+					text.put(Key.get(i),false);
+				}
+				catch (GLException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			System.out.println("123456");
+			List<String> key = new ArrayList<String>(text.keySet()); 
+
+			for(String s :key){
+				System.out.println(s+"  "+ text.get(s));
+			}
+			// Use linear filter for texture if image is larger than the original texture
+			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			// Use linear filter for texture if image is smaller than the original texture
+			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			// Texture image flips vertically. Shall use TextureCoords class to retrieve
+			// the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
+			for(String s : Key){
+				if(text.get(s)){
+					TextureCoords textureCoords = texturebox[Key.indexOf(s)].getImageTexCoords();
+					model.textureTop = textureCoords.top();
+					model.textureBottom = textureCoords.bottom();
+					model.textureLeft = textureCoords.left();
+					model.textureRight = textureCoords.right();
+				}
+
+			}
+		}
+
 	}
 	/** 
 	 * Called back by the animator to perform rendering
@@ -101,36 +155,7 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 		// Player is at (posX, 0, posZ), Translate the scene to (-posX, 0, -posZ)
 		gl.glTranslatef(-model.getPosX(), -model.getWalkBias() - 0.5f, -model.getPosZ());
-		if(model.textureFileName!=null){
-			try {
-				
-				// Create a OpenGL Texture object from (URL, mipmap, file suffix)
-				// Use URL so that can read from JAR and disk file.
-				//System.out.println(model.textureFileName);
-				//System.out.println(model.textureFileType);
-				model.texture = TextureIO.newTexture(
-						getClass().getClassLoader().getResource(model.textureFileName), // relative to project root 
-						false, model.textureFileType);
 
-				// Use linear filter for texture if image is larger than the original texture
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				// Use linear filter for texture if image is smaller than the original texture
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-				// Texture image flips vertically. Shall use TextureCoords class to retrieve
-				// the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
-				TextureCoords textureCoords = model.texture.getImageTexCoords();
-				model.textureTop = textureCoords.top();
-				model.textureBottom = textureCoords.bottom();
-				model.textureLeft = textureCoords.left();
-				model.textureRight = textureCoords.right();
-			} catch (GLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
 
 		// Lighting
 		if (model.getIsLigntOn()) {
@@ -138,16 +163,15 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		} else {
 			gl.glDisable(GL_LIGHTING);
 		}
-		if(model.texture!=null){
-			
-			// Enables this texture's target in the current GL context's state.
-			model.texture.enable(gl);
-			// same as gl.glEnable(texture.getTarget());
-			// gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
-			// Binds this texture to the current GL context.
-			model.texture.bind(gl);  // same as gl.glBindTexture(texture.getTarget(), texture.getTextureObject());
-			// ----- creer des objets -----
+		List<String> Key = new ArrayList<String>(text.keySet());   
+	
+		for(String s: Key){
+			if(text.get(s)){
+				gl.glBindTexture (GL2.GL_TEXTURE_2D, texturebox[Key.indexOf(s)].getTextureObject ());
+			}
 		}
+		// ----- creer des objets -----
+
 		// first room
 
 		Room r=new Room();
@@ -158,41 +182,47 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(model.texture!=null){
-				r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
-				//System.out.println("1235465");
-			}
-			else{
-				r.draw(gl);
+
+			r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+			//System.out.println("1235465");
 
 
-			}
-			// r.draw(gl);
+
 		}
+		// r.draw(gl);
+
 
 	}
+	public Texture[] getTexturebox() {
+		return texturebox;
+	}
+
+	public HashMap<String, Boolean> getText() {
+		return text;
+	}
+
 	/**
 	 * Call-back handler for window re-size event. Also called when the drawable is
 	 * first set to visible.
 	 * */
-	 @Override
-	   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-	      GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
-	      if (height == 0) height = 1;   // prevent divide by zero
-	      float aspect = (float)width / height;
+		if (height == 0) height = 1;   // prevent divide by zero
+		float aspect = (float)width / height;
 
-	      // Set the view port (display area) to cover the entire window
-	      gl.glViewport(0, 0, width, height);
+		// Set the view port (display area) to cover the entire window
+		gl.glViewport(0, 0, width, height);
 
-	      // Setup perspective projection, with aspect ratio matches viewport
-	      gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
-	      gl.glLoadIdentity();             // reset projection matrix
-	      glu.gluPerspective(45.0, aspect, 0.1, 100.0); // fovy, aspect, zNear, zFar
+		// Setup perspective projection, with aspect ratio matches viewport
+		gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
+		gl.glLoadIdentity();             // reset projection matrix
+		glu.gluPerspective(45.0, aspect, 0.1, 100.0); // fovy, aspect, zNear, zFar
 
-	      // Enable the model-view transform
-	      gl.glMatrixMode(GL_MODELVIEW);
-	      gl.glLoadIdentity(); // reset
-	   }
+		// Enable the model-view transform
+		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glLoadIdentity(); // reset
+	}
 
 }
