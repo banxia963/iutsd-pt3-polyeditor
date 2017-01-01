@@ -55,7 +55,7 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	//Tableau de texture qui contient des texture
 	private Texture[] texturebox=new Texture[3];
 	//nom du texture + un boolean qui determine la condition de texture(bind ou pas)
-	private HashMap<String,Boolean> text= new HashMap<String,Boolean>();
+
 
 
 	// ** Constructeur par default */
@@ -94,49 +94,39 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		model.initTexture();
 		if(model.texture!=null){
 			List<String> Key = new ArrayList<String>(model.texture.keySet());   
-			System.out.println(model.texture.get(0));
-			System.out.println(Key.size());
-			for(int i=0;i<Key.size();i++){
-				try {
-					// Create a OpenGL Texture object from (URL, mipmap, file suffix)
-					// Use URL so that can read from JAR and disk file.
+
+			try {
+				// Create a OpenGL Texture object from (URL, mipmap, file suffix)
+				// Use URL so that can read from JAR and disk file.
+				for(int i=0;i<Key.size();i++){
 					texturebox[i] = TextureIO.newTexture(
 							getClass().getClassLoader().getResource(Key.get(i)), // relative to project root 
-							false, model.texture.get(i));		
-					text.put(Key.get(i),false);
+							false, model.texture.get(Key.get(i)));		
+					model.text.put(Key.get(i),false);
 				}
-				catch (GLException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				// Use linear filter for texture if image is larger than the original texture
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				// Use linear filter for texture if image is smaller than the original texture
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				// Texture image flips vertically. Shall use TextureCoords class to retrieve
+				// the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
+
+				TextureCoords textureCoords = texturebox[0].getImageTexCoords();
+				model.textureTop = textureCoords.top();
+				model.textureBottom = textureCoords.bottom();
+				model.textureLeft = textureCoords.left();
+				model.textureRight = textureCoords.right();
 			}
-
-			System.out.println("123456");
-			List<String> key = new ArrayList<String>(text.keySet()); 
-
-			for(String s :key){
-				System.out.println(s+"  "+ text.get(s));
-			}
-			// Use linear filter for texture if image is larger than the original texture
-			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			// Use linear filter for texture if image is smaller than the original texture
-			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			// Texture image flips vertically. Shall use TextureCoords class to retrieve
-			// the top, bottom, left and right coordinates, instead of using 0.0f and 1.0f.
-			for(String s : Key){
-				if(text.get(s)){
-					TextureCoords textureCoords = texturebox[Key.indexOf(s)].getImageTexCoords();
-					model.textureTop = textureCoords.top();
-					model.textureBottom = textureCoords.bottom();
-					model.textureLeft = textureCoords.left();
-					model.textureRight = textureCoords.right();
-				}
-
+			catch (GLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
 	}
+
+
 	/** 
 	 * Called back by the animator to perform rendering
 	 * */
@@ -163,10 +153,9 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		} else {
 			gl.glDisable(GL_LIGHTING);
 		}
-		List<String> Key = new ArrayList<String>(text.keySet());   
-	
+		List<String> Key = new ArrayList<String>(model.text.keySet());   
 		for(String s: Key){
-			if(text.get(s)){
+			if(model.text.get(s)){
 				gl.glBindTexture (GL2.GL_TEXTURE_2D, texturebox[Key.indexOf(s)].getTextureObject ());
 			}
 		}
@@ -182,24 +171,16 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
-			//System.out.println("1235465");
-
-
-
 		}
 		// r.draw(gl);
 
 
 	}
-	public Texture[] getTexturebox() {
-		return texturebox;
-	}
 
-	public HashMap<String, Boolean> getText() {
-		return text;
-	}
+
+
+
 
 	/**
 	 * Call-back handler for window re-size event. Also called when the drawable is
