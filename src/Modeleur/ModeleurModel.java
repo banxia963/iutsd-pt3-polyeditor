@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 
 import Blueprint.Corridor;
 import Blueprint.Room;
-import Blueprint.Space;
 
 /** 
  * class ModeleurModel 
@@ -53,15 +52,16 @@ public class ModeleurModel {
 	/** Une entiere qui signifie le mode de dessiner: 1 - Chambre(Room) ; 2 - Couloir(Corridor) */
 	protected int mode=0;
 	
-	protected JPanel bg, toolbar, optsMode, optsRoom, optsWall, optsVertex, save;
+	protected JPanel bg, toolbar, optsMode, optsRoom, optsCorridor, optsWall, optsTraces, optsVertex, save;
 	
-	protected JButton bRoom, bCorridor, bRectangle, bHexagon, bOctogon, bVertex, bDoor, bWindow, bDelVertex;
+	protected JButton 	bRoom, bCorridor, bRectangle, bHexagon, bOctogon, bVertex, bAddVertex, bDoor, bWindow, 
+						bDelVertex, bWidth, bNextRoom, bLastRoom, bHeight, bNbStairs;
 	
 	protected FileDialog saveDia =  new FileDialog(new JFrame(),"ENREGISTREMENT",FileDialog.SAVE);
 	
 	protected Room room = new Room(4,"Rectangle");
 	
-	protected Space s;
+	protected Corridor corridor = new Corridor("Couloir");
 	
 	/** rayon de Vertex */
 	protected float r=(float)25/2;
@@ -97,6 +97,7 @@ public class ModeleurModel {
 		g.gridy = 2;
 		optsMode.add(bCorridor, g);
 		
+		// Options pour la chambre
 		optsRoom = new JPanel(new GridBagLayout());
 		optsRoom.setBackground(ModeleurModel.DARKGREY2);
 		optsRoom.setPreferredSize(new Dimension(130*2,420*2));
@@ -183,6 +184,24 @@ public class ModeleurModel {
 		g.insets= new Insets(10,0,10,0);
 		optsVertex.add(bDelVertex,g);
 		
+		// Options pour la trace
+		optsTraces = new JPanel(new GridBagLayout());
+		optsTraces.setBackground(ModeleurModel.DARKGREY2);
+		optsTraces.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bAddVertex= new JButton("+ POINT");
+		bAddVertex.setFont(font);
+		bAddVertex.setForeground(ModeleurModel.BLACK);
+		bAddVertex.setBackground(ModeleurModel.DARKGREY4);
+		bAddVertex.setPreferredSize(new Dimension(110*2,70));
+		bAddVertex.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsTraces.add(bAddVertex,g);
+		
+		
 		// Options pour l'enregistrement
 		bSave = new JButton("ENREGISTRER");
 		bSave.setFont(font);
@@ -190,6 +209,59 @@ public class ModeleurModel {
 		bSave.setBackground(ModeleurModel.DARKGREY4);
 		bSave.setPreferredSize(new Dimension(110*2,70));
 		bSave.setFocusPainted(false);
+		
+		// Options pour la couloir
+		optsCorridor = new JPanel(new GridBagLayout());
+		optsCorridor.setBackground(ModeleurModel.DARKGREY2);
+		optsCorridor.setPreferredSize(new Dimension(130*2,420*2));
+		
+		bWidth = new JButton("LARGEUR");
+		bWidth.setFont(font);
+		bWidth.setForeground(ModeleurModel.BLACK);
+		bWidth.setBackground(ModeleurModel.DARKGREY4);
+		bWidth.setPreferredSize(new Dimension(110*2,70));
+		bWidth.setFocusPainted(false);
+		
+		bHeight = new JButton("HAUTEUR");
+		bHeight.setFont(font);
+		bHeight.setForeground(ModeleurModel.BLACK);
+		bHeight.setBackground(ModeleurModel.DARKGREY4);
+		bHeight.setPreferredSize(new Dimension(110*2,70));
+		bHeight.setFocusPainted(false);
+		
+		bNbStairs = new JButton("ETAGES");
+		bNbStairs.setFont(font);
+		bNbStairs.setForeground(ModeleurModel.BLACK);
+		bNbStairs.setBackground(ModeleurModel.DARKGREY4);
+		bNbStairs.setPreferredSize(new Dimension(110*2,70));
+		bNbStairs.setFocusPainted(false);
+		
+		bLastRoom = new JButton("ENTRANT");
+		bLastRoom.setFont(font);
+		bLastRoom.setForeground(ModeleurModel.BLACK);
+		bLastRoom.setBackground(ModeleurModel.DARKGREY4);
+		bLastRoom.setPreferredSize(new Dimension(110*2,70));
+		bLastRoom.setFocusPainted(false);
+		
+		bNextRoom = new JButton("SORTANT");
+		bNextRoom.setFont(font);
+		bNextRoom.setForeground(ModeleurModel.BLACK);
+		bNextRoom.setBackground(ModeleurModel.DARKGREY4);
+		bNextRoom.setPreferredSize(new Dimension(110*2,70));
+		bNextRoom.setFocusPainted(false);
+		
+		g.gridx = 0;
+		g.gridy = 1;
+		g.insets= new Insets(10,0,10,0);
+		optsCorridor.add(bWidth, g);
+		g.gridy = 2;
+		optsCorridor.add(bHeight, g);
+		g.gridy = 3;
+		optsCorridor.add(bNbStairs, g);
+		g.gridy = 4;
+		optsCorridor.add(bLastRoom, g);
+		g.gridy = 5;
+		optsCorridor.add(bNextRoom, g);
 		
 		// save contient bsave
 		save = new JPanel();
@@ -231,8 +303,8 @@ public class ModeleurModel {
 			if(mode==1){ // mode pour dessiner le chambre
 				room.draw(g);
 			} else if (mode==2){
-				s=new Corridor();
-				s.draw(g);
+				//s=new Corridor();
+				corridor.draw(g);
 			}
 		}
 	}

@@ -14,10 +14,10 @@ import com.jogamp.opengl.GL2;
 
 /** class Open */
 public abstract class Open {
-	protected String id, next=null;
-	protected Vertex v1,v2;
-	protected float r1,r2;
-	protected String nextOpen=null;
+	private String id, next=null;
+	private Vertex v1,v2;
+	private float r1,r2;
+	private String nextOpen=null;
 	
 	public Open(String id, Vertex v1, Vertex v2){
 		this.id=id;
@@ -26,7 +26,7 @@ public abstract class Open {
 		this.r1=(float)1/4;
 		this.r2=(float)3/4;
 	}
-	
+
 	public String getID(){
 		return id;
 	}

@@ -17,8 +17,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
-
+import Blueprint.Corridor;
 import Blueprint.Room;
 import Blueprint.Wall;
 
@@ -96,6 +95,49 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 					mm.toolbar.repaint();
 				}
 			}
+				
+			}
+		else if (mm.mode==2){
+			for (Wall w : mm.corridor.getTraces()){
+				w.getV1().select(x, y);
+				if(w.getV1().isSelected()){
+					mm.toolbar.removeAll();
+					
+					mm.toolbar.add(mm.optsVertex, BorderLayout.CENTER);
+					mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+					mm.toolbar.validate();
+					mm.toolbar.repaint();
+					
+					selected=true;
+				}
+				w.getV2().select(x, y);
+				if(w.getV2().isSelected()){
+					selected=true;
+				}
+				w.select(x, y);
+				if(w.isSelected()){
+					mm.toolbar.removeAll();
+					
+					mm.bAddVertex.addActionListener(this);
+					
+					mm.toolbar.add(mm.optsTraces, BorderLayout.CENTER);
+					mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+					mm.toolbar.validate();
+					mm.toolbar.repaint();
+					
+					selected=true;
+				}
+				mm.graph.repaint();
+				
+				if(!selected){
+					mm.toolbar.removeAll();
+					mm.toolbar.add(mm.optsCorridor, BorderLayout.CENTER);
+					mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+					mm.toolbar.validate();
+					mm.toolbar.repaint();
+				}
+			}
+			
 		}
 		
 	}
@@ -137,12 +179,29 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 					mm.room.lastWall(w).getV2().move(list[0], list[1]);
 					mm.graph.repaint();
 				}	
-				else if (w.getV1().isSelected()){
-					w.getV1().move(x-mm.r, y-mm.r);
+				/*else if (w.getV1().isSelected()){
+					float[] point = Room.findIntersectionPoint(mm.room.lastWall(mm.room.lastWall(w)), mm.room.nextWall(w));
+					if(Room.isInTriangle(x-mm.r, y-mm.r, point[0], point[1], mm.room.lastWall(w).getV1(), w.getV2()))
+						w.getV1().move(x-mm.r, y-mm.r);
 					mm.graph.repaint();
-				}
+				}*/
 				else if (w.getV2().isSelected()){
-					w.getV2().move(x-mm.r, y-mm.r);
+					if(mm.room.lastWall(w).getV1().equals(mm.room.nextWall(mm.room.nextWall(w)).getV2())){
+						System.out.println("v1=v2");
+					}
+					else{
+						float[] point = Room.findIntersectionPoint(mm.room.lastWall(w), mm.room.nextWall(mm.room.nextWall(w)));
+						if(point==null){
+							if(Room.betweenWalls(x, y, w, mm.room.lastWall(w), mm.room.nextWall(mm.room.nextWall(w)))){
+								w.getV2().move(x, y);
+								mm.room.nextWall(w).getV1().move(x, y);
+							}
+						} 
+						else if(Room.isInTriangle(x-mm.r, y-mm.r, point[0], point[1], w.getV1(), mm.room.nextWall(w).getV2())){
+							w.getV2().move(x-mm.r, y-mm.r);
+							mm.room.nextWall(w).getV1().move(x-mm.r, y-mm.r);
+						}
+					}
 					mm.graph.repaint();
 				}
 				else if (w.getOpen() != null){
@@ -158,6 +217,30 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 					}
 					mm.graph.repaint();
 				}
+			}
+		} 
+		else if (mm.mode == 2){
+			for (Wall w : mm.corridor.getTraces()){
+				if(w.isSelected()){
+					float[] list=w.move(x, y);
+					if(mm.corridor.nextWall(w)==null){
+						
+					}else{
+						mm.corridor.nextWall(w).getV1().move(list[2], list[3]);
+					}
+					if(mm.corridor.lastWall(w)==null){
+						
+					}else{
+						mm.corridor.lastWall(w).getV2().move(list[0], list[1]);
+					}
+				}
+				else if (w.getV1().isSelected()){
+					w.getV1().move(x-mm.r, y-mm.r);
+				}
+				else if (w.getV2().isSelected()){
+					w.getV2().move(x-mm.r, y-mm.r);
+				}
+				mm.graph.repaint();
 			}
 		}
 		
@@ -177,16 +260,22 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 		
 		GridBagConstraints g = new GridBagConstraints();
 		
-		if (source == mm.bSave && mm.mode==1){
+		if (source == mm.bSave){
 			mm.saveDia.setVisible(true);
 			final String dir = mm.saveDia.getDirectory();
 			final String file = mm.saveDia.getFile();
 			mm.saveDia.dispose();
 			if (dir != null && file != null) {
 				try {
-					mm.room.write(dir+file);
-					Room room2= new Room();
-					room2.read(dir+file);
+					if(mm.mode==1){
+						mm.room.write(dir+file);
+						Room room2= new Room();
+						room2.read(dir+file);
+					} else if(mm.mode==2){
+						mm.corridor.write(dir+file);
+						//Corridor corridor2=new Corridor();
+						//corridor
+					}
 				} catch (IOException exception){
 					System.out.println("cant even!");
 				}
@@ -207,6 +296,17 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 			mm.graph.repaint();
 		} else if (source == mm.bCorridor ){
 			mm.mode=2;
+			mm.toolbar.removeAll();
+			
+			mm.bVertex.addActionListener(this);
+			mm.bWidth.addActionListener(this);
+			mm.bLastRoom.addActionListener(this);
+			mm.bNextRoom.addActionListener(this);
+			
+			mm.toolbar.add(mm.optsCorridor, BorderLayout.CENTER);
+			mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+			mm.toolbar.validate();
+			mm.toolbar.repaint();
 			mm.graph.validate();
 			mm.graph.repaint();
 		} else if (source == mm.bRectangle && mm.mode==1){
@@ -240,6 +340,26 @@ public class ModeleurController implements ActionListener, MouseListener, MouseM
 			
 			mm.toolbar.removeAll();
 			mm.toolbar.add(mm.optsRoom, BorderLayout.CENTER);
+			mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+			mm.toolbar.validate();
+			mm.toolbar.repaint();
+			mm.graph.validate();
+			mm.graph.repaint();
+		} else if (source == mm.bAddVertex && mm.mode == 2){
+			mm.corridor.addVertex();
+			mm.graph.repaint();
+			
+			mm.toolbar.removeAll();
+			mm.toolbar.add(mm.optsVertex, BorderLayout.CENTER);
+			mm.toolbar.add(mm.save, BorderLayout.SOUTH);
+			mm.toolbar.validate();
+			mm.toolbar.repaint();
+		} else if (source == mm.bDelVertex && mm.mode==2){
+			mm.corridor.delVertex();
+			mm.graph.repaint();
+			
+			mm.toolbar.removeAll();
+			mm.toolbar.add(mm.optsCorridor, BorderLayout.CENTER);
 			mm.toolbar.add(mm.save, BorderLayout.SOUTH);
 			mm.toolbar.validate();
 			mm.toolbar.repaint();

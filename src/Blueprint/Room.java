@@ -9,6 +9,7 @@
 package Blueprint;
 
 import java.awt.Graphics;
+import java.awt.geom.Line2D;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,20 +23,42 @@ import java.util.Scanner;
 
 import com.jogamp.opengl.GL2;
 
-public class Room extends Space {
+public class Room implements Space {
+	private String id;
+	private ArrayList<Wall> walls = new ArrayList();
 	
 	public Room(){
-		
 	}
 	
 	public Room(int nb, String id) {
-		if (nb == 4){
-			walls.add(new Wall(new Vertex(190,120),new Vertex(190,800)));
-			walls.add(new Wall(new Vertex(190,800),new Vertex(850,800)));
-			walls.add(new Wall(new Vertex(850,800),new Vertex(850,120)));
-			walls.add(new Wall(new Vertex(850,120),new Vertex(190,120)));
+		this.id=id;
+		switch (nb) {
+		case 4: walls.add(new Wall(new Vertex(190,120),new Vertex(190,800)));
+				walls.add(new Wall(new Vertex(190,800),new Vertex(850,800)));
+				walls.add(new Wall(new Vertex(850,800),new Vertex(850,120)));
+				walls.add(new Wall(new Vertex(850,120),new Vertex(190,120)));
+				walls.get(1).addDoor("Door");;
+				break;
+		case 6: walls.add(new Wall(new Vertex(340,120),new Vertex(190,460)));
+				walls.add(new Wall(new Vertex(190,460),new Vertex(340,800)));
+				walls.add(new Wall(new Vertex(340,800),new Vertex(700,800)));
+				walls.add(new Wall(new Vertex(700,800),new Vertex(850,460)));
+				walls.add(new Wall(new Vertex(850,460),new Vertex(700,120)));
+				walls.add(new Wall(new Vertex(700,120),new Vertex(340,120)));
+				walls.get(2).addDoor("Door");
+				break;
+		case 8: walls.add(new Wall(new Vertex(355,120),new Vertex(190,290)));
+				walls.add(new Wall(new Vertex(190,290),new Vertex(190,630)));
+				walls.add(new Wall(new Vertex(190,630),new Vertex(355,800)));
+				walls.add(new Wall(new Vertex(355,800),new Vertex(685,800)));
+				walls.add(new Wall(new Vertex(685,800),new Vertex(850,630)));
+				walls.add(new Wall(new Vertex(850,630),new Vertex(850,290)));
+				walls.add(new Wall(new Vertex(850,290),new Vertex(685,120)));
+				walls.add(new Wall(new Vertex(685,120),new Vertex(355,120)));
+				walls.get(3).addDoor("Door");
+				break;
+		default: break;
 		}
-		this.id = id;
 	}
 	
 	public ArrayList<Wall> getWalls(){
@@ -85,6 +108,77 @@ public class Room extends Space {
 		}
 		
 		
+	}
+	
+	public static int ptPosition(float x, float y, Vertex vA, Vertex vB){
+		float r=(float)25/2;
+		float position = (vB.getX()-r-vA.getX()-r)*(y-r-vA.getY()-r)-(vB.getY()-r-vA.getY()-r)*(x-r-vA.getX()-r);
+		if (position > 0) return 1;
+		else if (position < 0 ) return -1;
+		return 0;
+	}
+	
+	public static float[] findIntersectionPoint(Wall w1, Wall w2){
+		float x1 = w1.getV1().getX();
+		float y1 = w1.getV1().getY();
+		float x2 = w1.getV2().getX();
+		float y2 = w1.getV2().getY();
+		float x3 = w2.getV1().getX();
+		float y3 = w2.getV1().getY();
+		float x4 = w2.getV2().getX();
+		float y4 = w2.getV2().getY();
+		float a1 = (y1-y2)/(x1-x2);
+		float a2 = (y3-y4)/(x3-x4);
+		if(a1==a2) return null;
+		
+		float b1 = y1-x1*a1;
+		float b2 = y3-x3*a2;
+		
+		float[] point = new float[2];
+		point[0]=(b2-b1)/(a1-a2);
+		point[1]=a1*point[0]+b1;
+		
+		return point;
+	}
+	
+	public static boolean betweenWalls(float x, float y, Wall w, Wall w1, Wall w2){
+		float r=(float)25/2;
+		int pos = ptPosition(x, y, w.getV1(), w2.getV1());
+		if (pos == -1){
+			return false;
+		}
+		else if(pos == 0)
+		{
+			return true;
+		}
+		else {
+			Line2D l1 = new Line2D.Float(w1.getV1().getX()-r, w1.getV1().getY()-r, w1.getV2().getX()-r, w1.getV2().getY()-r);
+			Line2D l2 = new Line2D.Float(w2.getV1().getX()-r, w2.getV1().getY()-r, w2.getV2().getX()-r, w2.getV2().getY()-r);
+			float disLines = w.getV1().getX()-w2.getV1().getX();
+			if(disLines == 0){
+				disLines = w.getV1().getY()-w2.getV1().getY();
+			}
+			if(disLines < 0){
+				disLines=-disLines;
+			}
+			double disPtLines = l1.ptLineDist(x-r, y-r)+l2.ptLineDist(x-r, y-r);
+			if(disPtLines - disLines < 0.001) return true;
+			return false;
+		}
+	}
+	
+	public static boolean isInTriangle(float x, float y, float x3, float y3, Vertex v1, Vertex v2){
+		float x1 = v1.getX(), y1 = v1.getY();
+		float x2 = v2.getX(), y2 = v2.getY();
+
+		double ABC = Math.abs (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+		double ABP = Math.abs (x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2));
+		double APC = Math.abs (x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y));
+		double PBC = Math.abs (x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2));
+
+		boolean isInTriangle = ABP + APC + PBC == ABC;
+		
+		return isInTriangle;
 	}
 	
 	public void addDoor(String id){
