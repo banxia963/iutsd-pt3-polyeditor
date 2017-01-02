@@ -15,7 +15,7 @@ import static java.awt.event.KeyEvent.VK_L;
 import static java.awt.event.KeyEvent.VK_S;
 import static java.awt.event.KeyEvent.VK_UP;
 import static java.awt.event.KeyEvent.VK_W;
-import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_F;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,6 +66,9 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 		case VK_L: // toggle light on/off
 			model.turnLight();
 			break;
+		case VK_F: //change texture
+			renderer.setCurrTextureFilter((renderer.getCurrTextureFilter() + 1) % renderer.getTexturebox().length);
+			break;
 		}
 	}
 
@@ -110,8 +113,6 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 						String TextureName = model.textureDia.getFile();
 						model.textureFileName="images/"+TextureName;
 						model.textureFileName=TextureName.substring(TextureName.lastIndexOf('.'));
-						model.initText();
-						model.changeCondition(model.textureFileName);
 						model.animator.start();
 					}
 				}

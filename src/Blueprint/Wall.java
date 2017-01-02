@@ -520,5 +520,5 @@ public class Wall {
 		new Wall(o.getV2(),v2).draw(gl, tT, tB, tL,  tR);
 	}
 		}
-	}
+}
 

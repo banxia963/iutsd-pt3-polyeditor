@@ -19,6 +19,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.jogamp.opengl.GL2;
+
 public class Corridor implements Space{
 	private String id;
 	private ArrayList<Wall> traces = new ArrayList<Wall>();
@@ -103,7 +105,6 @@ public class Corridor implements Space{
 	}
 	
 	
-	
 	public ArrayList<Wall> getTraces(){
 		return traces;
 	}
@@ -154,7 +155,86 @@ public class Corridor implements Space{
 			w.draw(g);
 		}
 	}
+	public void drawwall(GL2 gl){}
 	
+	public void draw(GL2 gl) {
+		
+		if(traces.size()==1){
+			traces.get(0).draw(gl);
+		}
+		if(traces.size()==2){
+			float b = 0;
+			float x =0;
+			float z =0;
+			float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
+			Wall w1=traces.get(0);
+			Wall w2 = traces.get(1);
+			Vertex v1,v2;
+			try {
+				v1 = (Vertex) w1.getV1().clone();
+				v2 = (Vertex) w2.getV2().clone();
+				
+				if (v1.getY()-v2.getY()!=0) {
+					b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
+					x = (float) ((width/2)*Math.sqrt(1/(1+b*b)));
+					z = (float) (Math.sqrt((width*width))/2*(1-(1/(1+b*b))));
+				
+					if(b> 0){
+						X1= v1.getX()+x;
+						X2= v1.getX()-x;
+						X3= v2.getX()+x;
+						X4= v2.getX()-x;
+
+						Z1 = v1.getY()+z;
+						Z2 = v1.getY()-z;
+						Z3 = v2.getY()+z;
+						Z4 = v2.getY()-z;
+					} else if(b < 0){
+						X1= v1.getX()-x;
+						X2= v1.getX()+x;
+						X3= v2.getX()-x;
+						X4= v2.getX()+x;
+
+						Z1 = v1.getY()+z;
+						Z2 = v1.getY()-z;
+						Z3 = v2.getY()+z;
+						Z4 = v2.getY()-z;
+					} else {
+						X1=v1.getX()+width/2;
+						X2=v1.getX()-width/2;
+						X3=v1.getX()+width/2;
+						X4=v1.getX()-width/2;
+						
+						Z1 = v1.getY();
+						Z2 = v1.getY();
+						Z3 = v2.getY();
+						Z4 = v2.getY();
+					}
+				} else {
+					X1=v1.getX();
+					X2=v1.getX();
+					X3=v2.getX();
+					X4=v2.getX();
+					Z1 = v1.getY()+width/2;
+					Z2 = v1.getY()-width/2;
+					Z3 = v2.getY()+width/2;
+					Z4 = v2.getY()-width/2;
+				}
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(traces.size()>=3){
+			
+			
+		}
+	}
+	
+	public void draw(GL2 gl, float tT, float tB, float tL, float tR) {
+		
+		
+		}
 	public void write(String filepath) throws IOException{
 		PrintWriter in = null;
 		try {

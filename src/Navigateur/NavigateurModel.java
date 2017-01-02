@@ -30,7 +30,6 @@ public class NavigateurModel {
 	
 	// un map qui contien le  path d'image et le type d'image 
 	protected HashMap<String,String> texture= new HashMap<String,String>();
-	protected HashMap<String,Boolean> text= new HashMap<String,Boolean>();
 	
 	protected float textureTop, textureBottom, textureLeft, textureRight;
 	protected GLCanvas canvas = new GLCanvas();
@@ -146,16 +145,5 @@ public class NavigateurModel {
 	public void lookDown() {
 		lookUpAngle += lookUpIncrement;
 	}
-	public void changeCondition(String s){
-		text.replace(s,true);
-	}
 	
-	public void initText(){
-		Set<String> Key = text.keySet();   
-		for(String s : Key){
-			if(text.get(s)){
-				text.replace(s, false);
-			}
-		}
-	}
 }

@@ -51,6 +51,7 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	private GLU glu;
 
 	private NavigateurModel model;
+	private static int currTextureFilter = 0; 
 
 	//Tableau de texture qui contient des texture
 	private Texture[] texturebox=new Texture[3];
@@ -102,7 +103,6 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 					texturebox[i] = TextureIO.newTexture(
 							getClass().getClassLoader().getResource(Key.get(i)), // relative to project root 
 							false, model.texture.get(Key.get(i)));		
-					model.text.put(Key.get(i),false);
 				}
 				// Use linear filter for texture if image is larger than the original texture
 				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -153,12 +153,10 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		} else {
 			gl.glDisable(GL_LIGHTING);
 		}
-		List<String> Key = new ArrayList<String>(model.text.keySet());   
-		for(String s: Key){
-			if(model.text.get(s)){
-				gl.glBindTexture (GL2.GL_TEXTURE_2D, texturebox[Key.indexOf(s)].getTextureObject ());
-			}
-		}
+		 // Enables this texture's target in the current GL context's state.
+	      texturebox[currTextureFilter].enable(gl);
+	      // Bind the texture with the currently chosen filter to the current OpenGL graphics context.
+	      texturebox[currTextureFilter].bind(gl);
 		// ----- creer des objets -----
 
 		// first room
@@ -181,6 +179,18 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 
 
 
+
+	public static void setCurrTextureFilter(int currTextureFilter) {
+		NavigateurView.currTextureFilter = currTextureFilter;
+	}
+
+	public static int getCurrTextureFilter() {
+		return currTextureFilter;
+	}
+
+	public Texture[] getTexturebox() {
+		return texturebox;
+	}
 
 	/**
 	 * Call-back handler for window re-size event. Also called when the drawable is
