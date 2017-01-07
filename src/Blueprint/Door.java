@@ -38,13 +38,13 @@ public class Door extends Open {
 		float z =0;
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
 		
-		Vertex v1,v2;
-		try {
-			v1 = (Vertex) getV1().clone();
-			v2 = (Vertex) getV2().clone();
+		//Vertex v1,v2;
+		//try {
+			//v1 = (Vertex) getV1().clone();
+			//v2 = (Vertex) getV2().clone();
 			
-			if (v1.getY()-v2.getY()!=0) {
-				b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
+		if (v1.getY()-v2.getY()!=0) {
+			b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
 				x = (float) ((weight/2)*Math.sqrt(1/(1+b*b)));
 				z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
 			
@@ -89,10 +89,10 @@ public class Door extends Open {
 				Z3 = v2.getY()+weight/2;
 				Z4 = v2.getY()-weight/2;
 			}
-		} catch (CloneNotSupportedException e) {
+		//} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e.printStackTrace();
+		//}
 		
 		gl.glBegin(GL2.GL_QUADS);
 		
@@ -153,12 +153,9 @@ public class Door extends Open {
 		float x =0;
 		float z =0;
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
-		Vertex v1,v2;
-		try {
-			v1 = (Vertex) getV1().clone();
-			v2 = (Vertex) getV2().clone();
-			if(v1.getY()-v2.getY()!=0){
-				b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
+		
+		if (v1.getY()-v2.getY()!=0) {
+			b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
 				x = (float) ((weight/2)*Math.sqrt(1/(1+b*b))); 
 				z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
 
@@ -205,10 +202,7 @@ public class Door extends Open {
 				Z4 = v2.getY()-weight/2;
 			}
 		
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		gl.glBegin(GL2.GL_QUADS);
 		
 		gl.glTexCoord2f(tL,tB);

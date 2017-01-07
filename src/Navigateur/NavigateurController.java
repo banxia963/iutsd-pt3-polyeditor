@@ -67,7 +67,7 @@ public class NavigateurController implements KeyListener,ActionListener,MouseLis
 			model.turnLight();
 			break;
 		case VK_F: //change texture
-			renderer.setCurrTextureFilter((renderer.getCurrTextureFilter() + 1) % renderer.getTexturebox().length);
+			NavigateurView.currTextureFilter = (NavigateurView.currTextureFilter + 1) % NavigateurView.texturebox.length;
 			break;
 		}
 	}

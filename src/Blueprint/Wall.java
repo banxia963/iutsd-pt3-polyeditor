@@ -404,7 +404,7 @@ public class Wall {
 		float z =0;
 		float X1=0,X2=0,X3=0,X4=0,Z1=0,Z2=0,Z3=0,Z4=0;
 		if(o==null){
-			if(v1.getY()-v2.getY()!=0){
+			if (v1.getY()-v2.getY()!=0) {
 				b = -((v1.getX()-v2.getX())/(v1.getY()-v2.getY()));
 				x = (float) ((weight/2)*Math.sqrt(1/(1+b*b))); 
 				z = (float) (Math.sqrt((weight*weight))/2*(1-(1/(1+b*b))));
@@ -452,6 +452,7 @@ public class Wall {
 				Z3 = v2.getY()+weight/2;
 				Z4 = v2.getY()-weight/2;
 			}
+		
 		
 		
 		gl.glBegin(GL2.GL_QUADS);
@@ -520,5 +521,10 @@ public class Wall {
 		new Wall(o.getV2(),v2).draw(gl, tT, tB, tL,  tR);
 	}
 		}
+
+	@Override
+	public String toString() {
+		return "Wall [v1=" + v1 + ", v2=" + v2 + "]";
+	}
 }
 

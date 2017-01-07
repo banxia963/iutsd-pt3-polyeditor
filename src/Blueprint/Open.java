@@ -15,7 +15,7 @@ import com.jogamp.opengl.GL2;
 /** class Open */
 public abstract class Open {
 	private String id, next=null;
-	private Vertex v1,v2;
+	protected Vertex v1,v2;
 	private float r1,r2;
 	private String nextOpen=null;
 	

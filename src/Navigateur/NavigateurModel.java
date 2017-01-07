@@ -132,7 +132,9 @@ public class NavigateurModel {
 	public void initTexture(){
 		texture.put("images/crate.png", ".png");
 		texture.put("images/glass.png", ".png");
-		texture.put("images/nehe.png", ".png");		
+		texture.put("images/nehe.png", ".png");
+		texture.put("images/wall.jpg", ".jpg");
+		texture.put("images/white.jpg",".jpg");
 	}
 
 

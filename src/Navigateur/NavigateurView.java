@@ -44,6 +44,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
+import Blueprint.Corridor;
 import Blueprint.Room;
 
 @SuppressWarnings("serial")
@@ -51,10 +52,10 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 	private GLU glu;
 
 	private NavigateurModel model;
-	private static int currTextureFilter = 0; 
+	protected static int currTextureFilter = 0; 
 
 	//Tableau de texture qui contient des texture
-	private Texture[] texturebox=new Texture[3];
+	protected static Texture[] texturebox=new Texture[5];
 	//nom du texture + un boolean qui determine la condition de texture(bind ou pas)
 
 
@@ -162,30 +163,21 @@ public class NavigateurView extends GLCanvas implements GLEventListener{
 		// first room
 
 		Room r=new Room();
+		Corridor c = new Corridor();
 		if(model.filename!=null){
 			try {
-				r.read(model.filename);
+				//r.read(model.filename);
+				c.read(model.filename);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+			//r.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
+			c.draw(gl, model.textureTop, model.textureBottom, model.textureLeft,model.textureRight);
 		}
 		// r.draw(gl);
 
 
-	}
-
-
-
-
-
-	public static void setCurrTextureFilter(int currTextureFilter) {
-		NavigateurView.currTextureFilter = currTextureFilter;
-	}
-
-	public static int getCurrTextureFilter() {
-		return currTextureFilter;
 	}
 
 	public Texture[] getTexturebox() {
